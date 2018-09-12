@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- gravity: 对齐方式 -->
+<!-- layout_gravity: 控制该组件在父容器中的对齐方式 -->
+<!-- orientation: 组件排列方式 horizontal/vertical -->
+<!-- layout_width: 布局宽度；wrap-content:组件实际大小; match-parent:填满父容器 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".QOL_Survey">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

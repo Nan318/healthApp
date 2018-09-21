@@ -1,4 +1,7 @@
 <resources>
+    <item name="Tag_4OPTION" type="id"></item>
+    <item name="Tag_7OPTION" type="id"></item>
+    <item name="Tag_7OPTION_ANSWER" type="id"></item>
     <string name="app_name">HealthApp</string>
     <string name="survey">SURVEY</string>
     <string name="send">Send</string>

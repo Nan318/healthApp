@@ -20,7 +20,7 @@
         android:bottom="13dp"
         android:left="9dp"
         android:right="9dp"
-        android:top="13dp">
+        android:top="11dp">
         <!-- show rectangle area -->
         <shape android:shape="rectangle">
             <solid

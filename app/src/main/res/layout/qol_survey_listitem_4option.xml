@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_question4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/qol_q1"
+        android:textColor="@android:color/black" />
+
+    <RadioGroup
+        android:id="@+id/qol4RadioGroupLine1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_11"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/qol_surAnswer_not"
+            android:theme="@style/MyRadioButton" />
+
+        <RadioButton
+            android:id="@+id/rb_12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/qol_surAnswer_little"
+            android:theme="@style/MyRadioButton"/>
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/qol4RadioGroupLine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_21"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/qol_surAnswer_bit"
+            android:theme="@style/MyRadioButton"/>
+
+        <RadioButton
+            android:id="@+id/rb_22"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/qol_surAnswer_much"
+            android:theme="@style/MyRadioButton"/>
+    </RadioGroup>
+
+</LinearLayout>

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QOL_Survey extends AppCompatActivity implements
+public class QolSurvey extends AppCompatActivity implements
         ViewPager.OnPageChangeListener {
     //UI Objects
     private ViewPager viewPager;
@@ -26,6 +26,10 @@ public class QOL_Survey extends AppCompatActivity implements
     //ssss
     public static final int PAGE_ONE = 0;
     public static final int PAGE_TWO = 1;
+    public static final int PAGE_THREE = 2;
+    public static final int PAGE_FOUR = 3;
+    public static final int PAGE_FIVE = 4;
+    public static final int PAGE_SIX = 5;
 
 
     @Override
@@ -56,13 +60,25 @@ public class QOL_Survey extends AppCompatActivity implements
     @Override
     public void onPageScrollStateChanged(int state) {
         //state的状态有三个，0表示什么都没做，1正在滑动，2滑动完毕
-        if (state == 2) {
+        if (state == 3) {
             switch (viewPager.getCurrentItem()) {
                 case PAGE_ONE:
                     viewPager.setCurrentItem(PAGE_ONE);
                     break;
                 case PAGE_TWO:
                     viewPager.setCurrentItem(PAGE_TWO);
+                    break;
+                case PAGE_THREE:
+                    viewPager.setCurrentItem(PAGE_THREE);
+                    break;
+                case PAGE_FOUR:
+                    viewPager.setCurrentItem(PAGE_FOUR);
+                    break;
+                case PAGE_FIVE:
+                    viewPager.setCurrentItem(PAGE_FIVE);
+                    break;
+                case PAGE_SIX:
+                    viewPager.setCurrentItem(PAGE_SIX);
                     break;
             }
         }

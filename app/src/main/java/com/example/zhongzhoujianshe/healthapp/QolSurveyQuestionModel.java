@@ -46,11 +46,6 @@ public class QolSurveyQuestionModel {
         this.answerOption = answerOption;
     }
 
-    public int getSelected() {
-        return selected;
-    }
 
-    public void setSelected(int selected) {
-        this.selected = selected;
-    }
+
 }

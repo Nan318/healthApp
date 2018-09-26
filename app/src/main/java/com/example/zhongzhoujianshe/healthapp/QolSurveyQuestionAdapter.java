@@ -1,6 +1,8 @@
 package com.example.zhongzhoujianshe.healthapp;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup;
+import com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup.OnCheckedChangeListener;
+
+
 import java.util.ArrayList;
 
-public class QolSurveyQuestionAdapter extends BaseAdapter {
+public class QolSurveyQuestionAdapter extends BaseAdapter{
     //定义两个类别标志
     private static final int TYPE_4OPTION = 0;
     private static final int TYPE_7OPTION = 1;
@@ -22,6 +28,10 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
     private Context context;
     private QolSurveyQuestionModel currentQuestion = null;
     private String answer = null;
+    private boolean isChecking = true;
+    private int mCheckedId = -1;
+    private ViewHolder1 holder1 = null;
+    private ViewHolder2 holder2 = null;
 
 
     public QolSurveyQuestionAdapter(ArrayList<QolSurveyQuestionModel> qolQuestionList, Context context) {
@@ -62,14 +72,14 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
     //类别项目
     @Override
     public int getViewTypeCount() {
+        //for now, there are only two kinds of question model: 1/4 & 1/7
         return 2;
     }
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
         //获取item视图类别
         int type = getItemViewType(position);
-        ViewHolder1 holder1 = null;
-        ViewHolder2 holder2 = null;
+
         if (view == null){ //当第一次加载ListView控件时  view为空
             //根据类别加载视图
             switch (type){
@@ -77,13 +87,26 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
                     holder1 = new ViewHolder1();
                     view = LayoutInflater.from(context).inflate(R.layout.qol_survey_listitem_4option,viewGroup,false);
                     holder1.txt_question4 = (TextView) view.findViewById(R.id.txt_question4);
-                    holder1.radioGroup1 = (RadioGroup) view.findViewById(R.id.RadioGroupLine1);
-                    holder1.radioGroup2 = (RadioGroup) view.findViewById(R.id.RadioGroupLine2);
+                    holder1.mRadioGroup = (MyMultipleLineRadioGroup) view.findViewById(R.id.mRadioGroup);
                     holder1.radioButton_11 = (RadioButton) view.findViewById(R.id.rb_11);
                     holder1.radioButton_12 = (RadioButton) view.findViewById(R.id.rb_12);
                     holder1.radioButton_21 = (RadioButton) view.findViewById(R.id.rb_21);
                     holder1.radioButton_22 = (RadioButton) view.findViewById(R.id.rb_22);
 
+                    //get the checked option of mRadioGroup in viewHolder1 (1/4)
+                    if (holder1.mRadioGroup != null){
+                        holder1.mRadioGroup.setOnCheckedChangeListener(new MyMultipleLineRadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(MyMultipleLineRadioGroup group, int checkedId) {
+                                RadioButton selectedbtn = (RadioButton) group.findViewById(checkedId);
+                                answer = selectedbtn.getText().toString();
+                                Toast.makeText(context, qolQuestionList.get(position).getQuestion()+"你选了" + answer, Toast.LENGTH_LONG).show();
+
+                            }
+
+                        });
+
+                    }
 
 
                     //缓存ViewHolder1，使用的key是strings.xml中定义的Tag_APP
@@ -130,7 +153,6 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
                     break;
             }
         }
-       // holder2.radioGroup1.setTag(position); // This line is important.
 
 
         //get the current item of the qolQuestionList
@@ -171,13 +193,12 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
         return view;
     }
 
-    //两个不同的ViewHolder
+   //两个不同的ViewHolder
     private class ViewHolder1 {
         //for 4 options
         TextView txt_question4;
-        RadioGroup radioGroup1;
-        RadioGroup radioGroup2;
-        RadioButton radioButton_11;
+        MyMultipleLineRadioGroup mRadioGroup; //self-defined radioGroup
+       RadioButton radioButton_11;
         RadioButton radioButton_12;
         RadioButton radioButton_21;
         RadioButton radioButton_22;
@@ -199,8 +220,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter {
 
     }
 
-    //set two radioGroups to be single choice in viewHolder1
+
 
 
 }
-

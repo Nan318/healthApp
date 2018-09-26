@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,52 +14,57 @@
         android:text="@string/qol_q1"
         android:textColor="@android:color/black" />
 
-    <RadioGroup
-        android:id="@+id/qol4RadioGroupLine1"
+    <com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup
+        android:id="@+id/mRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/rb_11"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/qol_surAnswer_not"
-            android:theme="@style/MyRadioButton" />
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rb_12"
-            android:layout_width="0dp"
+            <RadioButton
+                android:id="@+id/rb_11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="11"
+                android:theme="@style/MyRadioButton" />
+
+            <RadioButton
+                android:id="@+id/rb_12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="12"
+                android:theme="@style/MyRadioButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/qol_surAnswer_little"
-            android:theme="@style/MyRadioButton"/>
-    </RadioGroup>
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
 
-    <RadioGroup
-        android:id="@+id/qol4RadioGroupLine2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/rb_21"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="21"
+                android:theme="@style/MyRadioButton" />
 
-        <RadioButton
-            android:id="@+id/rb_21"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/qol_surAnswer_bit"
-            android:theme="@style/MyRadioButton"/>
-
-        <RadioButton
-            android:id="@+id/rb_22"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/qol_surAnswer_much"
-            android:theme="@style/MyRadioButton"/>
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/rb_22"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="22"
+                android:theme="@style/MyRadioButton" />
+        </LinearLayout>
+    </com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup>
 
 </LinearLayout>

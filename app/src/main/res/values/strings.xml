@@ -6,6 +6,14 @@
     <string name="survey">SURVEY</string>
     <string name="send">Send</string>
     <string name="back">Back</string>
+    <string name="notice">Notice</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="warning_txt">Questionnaire is not finished.</string>
+    <string name="ok">Ok</string>
+    <string name="notice_txt">The current editing survey has not been saved, do you want to save it?</string>
     <string name="qol_surAnswer_not">Not at All</string>
     <string name="qol_surAnswer_little">A Little</string>
     <string name="qol_surAnswer_bit">Quite a Bit</string>

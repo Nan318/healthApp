@@ -12,6 +12,48 @@
     android:orientation="vertical"
     tools:context=".QolSurvey">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/qolSurveyToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.Base">
+
+        <TextView
+            android:id="@+id/toolbar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:text="@string/back"
+            android:textColor="@drawable/selector_toobartext_color_white_blue"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/survey"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/toolbar_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:text="@string/icon_send_paper_plane"
+            android:textColor="@drawable/selector_toobartext_color_white_red"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
@@ -19,5 +61,7 @@
         android:padding="10dp">
 
     </android.support.v4.view.ViewPager>
+
+
 
 </LinearLayout>

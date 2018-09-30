@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_send_paper_plane">&#xe6ea; Send</string>
+    <string name="icon_notice">&#xe626; Notice</string>
+    <string name="icon_warning">&#xe501; </string>
+
+</resources>

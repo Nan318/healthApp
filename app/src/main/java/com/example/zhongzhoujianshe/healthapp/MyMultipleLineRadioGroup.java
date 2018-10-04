@@ -14,7 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-//这个类是源码RadioGroup复制出来,增加了递归查找子控件RadioButton
+//changed from the code of RadioGroup
 //this class supports 2X2 radioGroups
 public class MyMultipleLineRadioGroup extends LinearLayout {
     // holds the checked id; the selection is empty by default

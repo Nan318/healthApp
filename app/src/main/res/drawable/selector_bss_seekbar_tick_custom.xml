@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--this drawable is for tickMarks when pressing-->
+    <!--for tickMarks in normal-->
+    <item android:state_selected="true" android:drawable="@drawable/bss_seekbar_tick_verline" />
+    <item android:drawable="@drawable/bss_seekbar_tick_verline" />
+</selector>

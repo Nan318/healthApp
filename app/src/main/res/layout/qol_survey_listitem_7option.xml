@@ -15,7 +15,7 @@
         android:textSize="14sp" />
 
     <RadioGroup
-        android:id="@+id/qol7radioGroup"
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"

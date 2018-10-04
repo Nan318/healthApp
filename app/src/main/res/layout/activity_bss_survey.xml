@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".BssSurveyActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/bssNewToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.Base">
+
+        <TextView
+            android:id="@+id/toolbar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:text="@string/icon_back_bss"
+            android:textColor="@drawable/selector_toobartext_color_white_blue"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="New"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/toolbar_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:text="@string/icon_send_paper_plane"
+            android:textColor="@drawable/selector_toobartext_color_white_red"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@drawable/shadow_corner"
+        android:orientation="vertical"
+        android:padding="9dp">
+
+        <TextView
+            android:id="@+id/date_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/bss_topcorner_round"
+            android:gravity="center_horizontal|center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="@string/icon_date"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            tools:layout_width="match_parent"
+            tools:textColor="#ffffff" />
+
+        <TextClock
+            android:id="@+id/text_clock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/bssDateBg"
+            android:format24Hour="dd/MMM/yyyy HH:mm"
+            android:gravity="center"
+            android:paddingBottom="3dp"
+            android:textColor="@color/bssDateTxt"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="@string/bss_new_body_title"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/bss_new_type1"
+            android:textColor="@android:color/black" />
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+        </android.support.v4.view.ViewPager>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/bss_new_type1_txt"
+            android:textColor="@android:color/black" />
+
+        <com.warkiz.tickseekbar.TickSeekBar
+            android:id="@+id/seekbar_bss_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tsb_max="7"
+            app:tsb_min="1"
+            app:tsb_progress="1"
+            app:tsb_show_tick_marks_type="custom"
+            app:tsb_show_tick_texts="above"
+            app:tsb_thumb_color="@color/bssRateBtn"
+            app:tsb_thumb_size="25dp"
+            app:tsb_tick_marks_color="@color/bssRateBtn"
+            app:tsb_tick_marks_drawable="@drawable/selector_bss_seekbar_tick_custom"
+            app:tsb_tick_texts_color="@drawable/selector_bss_seekbar_ticktxt_color"
+            app:tsb_tick_texts_size="16sp"
+            app:tsb_ticks_count="7"
+            app:tsb_track_progress_color="@color/bssRateBtn"
+            app:tsb_track_progress_size="2dp" />
+
+        <TextView
+            android:id="@+id/txt_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@android:color/holo_purple" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+    </LinearLayout>
+
+</LinearLayout>

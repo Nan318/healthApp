@@ -1,6 +1,5 @@
 package com.example.zhongzhoujianshe.healthapp;
 
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -9,18 +8,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-public class QolSurvey extends AppCompatActivity implements
+import java.util.ArrayList;
+
+public class QolSurveyActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener {
     //UI Objects
     private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
     private ViewPager viewPager;
     private QolSurveyFragmentPagerAdapter qolSurveyAdapter;
-
+    private String[] qolAllAnswer;
     //几个代表页面的常量
     //ssss
     public static final int PAGE_ONE = 0;
@@ -29,13 +31,13 @@ public class QolSurvey extends AppCompatActivity implements
     public static final int PAGE_FOUR = 3;
     public static final int PAGE_FIVE = 4;
     public static final int PAGE_SIX = 5;
-
+    private QolSurveyAnswerModel surveyResult = new QolSurveyAnswerModel("4");
     //private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qol__survey);
+        setContentView(R.layout.activity_qol_survey);
 
         //used for setting icon-font
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");
@@ -50,18 +52,27 @@ public class QolSurvey extends AppCompatActivity implements
         //set click event
         txt_menu_send.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                showSendDialog();
+                if(surveyResult.getResults().size()<51){
+                    Toast.makeText(getApplicationContext(), "finish"+surveyResult.getResults().size(), Toast.LENGTH_LONG).show();
+                    showSendDialog();
+                }else if(surveyResult.getResults().size() == 51){
+                    Toast.makeText(getApplicationContext(), "all finish", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         //back text_btn
         TextView txt_menu_back = (TextView) toolbar.findViewById(R.id.toolbar_back);
         txt_menu_back.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+
+
                 showBackDialog();
             }
         });
 
-        qolSurveyAdapter = new QolSurveyFragmentPagerAdapter(getSupportFragmentManager());
+        qolSurveyAdapter = new QolSurveyFragmentPagerAdapter(getSupportFragmentManager(),this, surveyResult);
+        qolSurveyAdapter.setData();
         bindViews();
     }
     /*
@@ -100,6 +111,7 @@ public class QolSurvey extends AppCompatActivity implements
     private void bindViews() {
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+
         viewPager.setAdapter(qolSurveyAdapter);
         viewPager.setCurrentItem(PAGE_ONE);
         viewPager.addOnPageChangeListener(this);
@@ -159,13 +171,19 @@ public class QolSurvey extends AppCompatActivity implements
         dialogBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(QolSurvey.this,"sendBtn！！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(QolSurveyActivity.this,"saveBtn！！",Toast.LENGTH_SHORT).show();
+
             }
         });
         dialogBtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(QolSurvey.this,"deleteBtn！！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(QolSurveyActivity.this,"deleteBtn！！",Toast.LENGTH_SHORT).show();
+               // RadioGroup rg7  = (RadioGroup) findViewById(R.id.radioGroup);
+               // RadioGroup rg4  = (RadioGroup) findViewById(R.id.mRadioGroup);
+               // rg7.clearCheck();
+               // rg4.clearCheck();
+
             }
         });
         dialogBtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -195,9 +213,11 @@ public class QolSurvey extends AppCompatActivity implements
         dialogBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "对话框已关闭~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "close", Toast.LENGTH_SHORT).show();
                 alert.dismiss();
             }
         });
     }
+
+
 }

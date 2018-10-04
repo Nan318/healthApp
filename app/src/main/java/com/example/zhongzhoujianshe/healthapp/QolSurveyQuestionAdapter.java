@@ -1,20 +1,13 @@
 package com.example.zhongzhoujianshe.healthapp;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup;
-import com.example.zhongzhoujianshe.healthapp.MyMultipleLineRadioGroup.OnCheckedChangeListener;
 
 
 import java.util.ArrayList;
@@ -28,15 +21,20 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
     private Context context;
     private QolSurveyQuestionModel currentQuestion = null;
     private String answer = null;
-    private boolean isChecking = true;
-    private int mCheckedId = -1;
+    private int questionId;
+    private QolSurveyAnswerModel results;
+
+    //private boolean isChecking = true;
+    //private int mCheckedId = -1;
     private ViewHolder1 holder1 = null;
     private ViewHolder2 holder2 = null;
 
 
-    public QolSurveyQuestionAdapter(ArrayList<QolSurveyQuestionModel> qolQuestionList, Context context) {
+
+    public QolSurveyQuestionAdapter(ArrayList<QolSurveyQuestionModel> qolQuestionList, Context context, QolSurveyAnswerModel result) {
         this.context = context;
         this.qolQuestionList = qolQuestionList;
+        this.results = result;
     }
 
     @Override
@@ -87,7 +85,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                     holder1 = new ViewHolder1();
                     view = LayoutInflater.from(context).inflate(R.layout.qol_survey_listitem_4option,viewGroup,false);
                     holder1.txt_question4 = (TextView) view.findViewById(R.id.txt_question4);
-                    holder1.mRadioGroup = (MyMultipleLineRadioGroup) view.findViewById(R.id.mRadioGroup);
+                    holder1.mRadioGroup = (MyMultipleLineRadioGroup) view.findViewById(R.id.radioGroup);
                     holder1.radioButton_11 = (RadioButton) view.findViewById(R.id.rb_11);
                     holder1.radioButton_12 = (RadioButton) view.findViewById(R.id.rb_12);
                     holder1.radioButton_21 = (RadioButton) view.findViewById(R.id.rb_21);
@@ -100,7 +98,12 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                             public void onCheckedChanged(MyMultipleLineRadioGroup group, int checkedId) {
                                 RadioButton selectedbtn = (RadioButton) group.findViewById(checkedId);
                                 answer = selectedbtn.getText().toString();
-                                Toast.makeText(context, qolQuestionList.get(position).getQuestion()+"你选了" + answer, Toast.LENGTH_LONG).show();
+                               // Toast.makeText(context, qolQuestionList.get(position).getQuestionId()+"你选了" + answer, Toast.LENGTH_LONG).show();
+                                questionId = qolQuestionList.get(position).getQuestionId();
+                                String[] itemResult = new String[2];
+                                itemResult[0] = String.valueOf(questionId);
+                                itemResult[1] = answer;
+                                results.setResults(itemResult);
 
                             }
 
@@ -116,7 +119,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                     holder2 = new ViewHolder2();
                     view = LayoutInflater.from(context).inflate(R.layout.qol_survey_listitem_7option,viewGroup,false);
                     holder2.txt_question7 = (TextView) view.findViewById(R.id.txt_question7);
-                    holder2.radioGroup1 = (RadioGroup) view.findViewById(R.id.qol7radioGroup);
+                    holder2.radioGroup1 = (RadioGroup) view.findViewById(R.id.radioGroup);
                     holder2.radioButton_11 = (RadioButton) view.findViewById(R.id.rb_1);
                     holder2.radioButton_12 = (RadioButton) view.findViewById(R.id.rb_2);
                     holder2.radioButton_13 = (RadioButton) view.findViewById(R.id.rb_3);
@@ -133,8 +136,12 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                            // qolQuestionList.get(getPosition).setSelected(selectedId); // Set the value of checkbox to maintain its state.
                             RadioButton selectedbtn = (RadioButton) radioGroup.findViewById(selectedId);
                             answer = selectedbtn.getText().toString();
-                            Toast.makeText(context, qolQuestionList.get(position).getQuestion()+"你选了" + answer, Toast.LENGTH_LONG).show();
-
+                            //Toast.makeText(context, qolQuestionList.get(position).getQuestionId()+"你选了" + answer, Toast.LENGTH_LONG).show();
+                            questionId = qolQuestionList.get(position).getQuestionId();
+                            String[] itemResult = new String[2];
+                            itemResult[0] = String.valueOf(questionId);
+                            itemResult[1] = answer;
+                            results.setResults(itemResult);
                         }
                     });
 
@@ -157,6 +164,8 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
 
         //get the current item of the qolQuestionList
         currentQuestion = qolQuestionList.get(position);
+        //get the id
+        int questionId = currentQuestion.getQuestionId();
         //get the question
         String question = currentQuestion.getQuestion();
         //get the answer options
@@ -166,7 +175,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
             case TYPE_4OPTION:
 
                 if (currentQuestion != null && answerOption.length == 4){
-                    holder1.txt_question4.setText(question);
+                    holder1.txt_question4.setText(questionId + question);
                     holder1.radioButton_11.setText(answerOption[0]);
                     holder1.radioButton_12.setText(answerOption[1]);
                     holder1.radioButton_21.setText(answerOption[2]);
@@ -175,7 +184,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                 break;
             case TYPE_7OPTION:
                 if(currentQuestion != null && answerOption.length == 7){
-                    holder2.txt_question7.setText(question);
+                    holder2.txt_question7.setText(questionId + question);
                     holder2.radioButton_11.setText(answerOption[0]);
                     holder2.radioButton_12.setText(answerOption[1]);
                     holder2.radioButton_13.setText(answerOption[2]);

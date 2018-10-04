@@ -7,7 +7,17 @@
     <color name="radiobutton">#469af8</color>
     <color name="toolbar">#4987c1</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="red">#ff0000</color>
-    <color name="gray">#aaaaaa</color>
+    <color name="gray">#b5b5b5</color>
     <color name="yellow">#ffffbb33</color>
+    <color name="bssDateBg">#406171</color>
+    <color name="bssDateTxt">#e4a354</color>
+    <color name="bssRateBtn">#f29b5f</color>
+    <color name="wvDateBg">#e0787c</color>
+    <color name="wvDateTxt">#437eb5</color>
+    <color name="wvInputGreen">#65c979</color>
+    <color name="wvInputInvalidRed">#d65946</color>
+    <color name="alertRed">#b13634</color>
+
 </resources>

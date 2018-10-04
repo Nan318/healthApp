@@ -3,5 +3,6 @@
     <string name="icon_send_paper_plane">&#xe6ea; Send</string>
     <string name="icon_notice">&#xe626; Notice</string>
     <string name="icon_warning">&#xe501; </string>
-
+    <string name="icon_back_bss">&#xe60b;Bristol Stool Scale</string>
+    <string name="icon_date">&#xe644; Date and time of response</string>
 </resources>

@@ -92,4 +92,12 @@
     <string name="bss_new_type6_txt">Fluffy pieces with ragged edges, a mushy stool</string>
     <string name="bss_new_type7">Type 7</string>
     <string name="bss_new_type7_txt">Watery, no solid pieces, entirely liquid</string>
+    <string name="aaa">&#xe67a;</string>
+    <string name="run">&#xe603;</string>
+    <string name="poo">&#xe67a;</string>
+    <string name="heart">&#xe769;</string>
+    <string name="dice">&#xe630;</string>
+    <string name="catalog">&#xe610;</string>
+    <string name="inbox">&#xe6f0;</string>
+
 </resources>

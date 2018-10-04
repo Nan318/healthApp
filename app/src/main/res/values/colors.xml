@@ -19,5 +19,10 @@
     <color name="wvInputGreen">#65c979</color>
     <color name="wvInputInvalidRed">#d65946</color>
     <color name="alertRed">#b13634</color>
+    <color name="colorPoo">#ffb201</color>
+    <color name="colorRun">#9048ae</color>
+    <color name="colorHeart">#dd5b61</color>
+    <color name="colorDice">#18a88a</color>
 
 </resources>
+

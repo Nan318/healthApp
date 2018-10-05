@@ -30,30 +30,22 @@
         android:text="@string/notice_txt"
         android:textColor="@android:color/black" />
 
-    <Button
+
+    <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
         android:id="@+id/btn_save"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/rectangle_round_blue"
-        android:text="@string/save"
-        android:textSize="14sp" />
-
-    <Button
+        android:layout_marginBottom="10dp"/>
+    <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
         android:id="@+id/btn_delete"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:background="@drawable/rectangle_round_red"
-        android:text="@string/delete" />
-
-    <Button
+        android:layout_weight="1"/>
+    <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
         android:id="@+id/btn_cancel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:background="@drawable/rectangle_round_gray"
-        android:text="@string/cancel" />
+        android:layout_weight="1"/>
 </LinearLayout>

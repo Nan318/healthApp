@@ -19,9 +19,9 @@ public class TestMyButton extends AppCompatActivity {
         myBtn.setBackColor(getResources().getColor(R.color.wvDateTxt));
         myBtn.setBackColorSelected(getResources().getColor(R.color.gray));
         myBtn.setTextColori(getResources().getColor(R.color.wvInputGreen));
-        myBtn.setTextColorSelected(getResources().getColor(R.color.yellow));
+        myBtn.setTextColorSelected(getResources().getColor(R.color.dialog_yellow));
         //myBtn.setStroke(3, getResources().getColor(R.color.wvInputGreen));
-        myBtn.setPressedStrokeWidthColor(3, getResources().getColor(R.color.yellow));
+        myBtn.setPressedStrokeWidthColor(3, getResources().getColor(R.color.dialog_yellow));
         myBtn.setBorderColor(Color.RED);
         myBtn.setBorderBottom(true);
         myBtn.setBorderWidth(7);

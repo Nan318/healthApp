@@ -60,7 +60,7 @@ public class BssSurveyActivity extends AppCompatActivity {
         //set click event
         txt_menu_send.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                showSendDialog();
+                Toast.makeText(getApplicationContext() , "sendBtn" , Toast.LENGTH_SHORT).show();
             }
         });
         //back text_btn
@@ -108,36 +108,6 @@ public class BssSurveyActivity extends AppCompatActivity {
         });
 
     }
-    private void showSendDialog() {
-        //加载布局并初始化组件
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_onebtn_dialog,null);
-        Button dialogBtnOk = (Button) dialogView.findViewById(R.id.btn_ok);
-        TextView dialogTitle = (TextView) dialogView.findViewById(R.id.txt_warning);
-        TextView dialogMessage = (TextView) dialogView.findViewById(R.id.txt_content);
-        //reset the button's color: red
-        dialogBtnOk.setBackgroundResource(R.drawable.rectangle_round_darkred);
-        //reset the title
-        dialogTitle.setText(R.string.incomplete);
-        //reset the message
-        dialogMessage.setText(R.string.incomplete_txt);
 
-        builder = new AlertDialog.Builder(this);
-        //builder.setTitle(getString(R.string.icon_warning));
-        builder.setView(dialogView);
-        //点击对话框以外的区域是否让对话框消失
-        builder.setCancelable(false);
-        alert = builder.create();
-        alert.show();
-
-        //设置组件
-        dialogBtnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alert.dismiss();
-                Toast.makeText(getApplicationContext(), "对话框已关闭~", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
 
 }

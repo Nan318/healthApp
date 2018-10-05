@@ -14,7 +14,7 @@
     <string name="warning_txt">Questionnaire is not finished.</string>
     <string name="incomplete">Incomplete</string>
     <string name="incomplete_txt">All fields are mandatory.</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="notice_txt">The current editing survey has not been saved, do you want to save it?</string>
     <string name="chart_week">Last Week</string>
     <string name="chart_month">Last Month</string>
@@ -95,6 +95,7 @@
     <string name="bss_new_type6_txt">Fluffy pieces with ragged edges, a mushy stool</string>
     <string name="bss_new_type7">Type 7</string>
     <string name="bss_new_type7_txt">Watery, no solid pieces, entirely liquid</string>
+    <string name="wv_new_toolbar_title">New Weekly Vitals</string>
     <string name="aaa">&#xe67a;</string>
     <string name="run">&#xe603;</string>
     <string name="poo">&#xe67a;</string>

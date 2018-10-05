@@ -1,5 +1,6 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -155,9 +156,31 @@ public class QolSurveyActivity extends AppCompatActivity implements
     private void showBackDialog() {
         //加载布局并初始化组件
         View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_threebtn_dialog,null);
-        Button dialogBtnSave = (Button) dialogView.findViewById(R.id.btn_save);
-        Button dialogBtnDelete = (Button) dialogView.findViewById(R.id.btn_delete);
-        Button dialogBtnCancel = (Button) dialogView.findViewById(R.id.btn_cancel);
+        MyRoundCornerButton dialogBtnSave = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_save);
+        MyRoundCornerButton dialogBtnDelete = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_delete);
+        MyRoundCornerButton dialogBtnCancel = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_cancel);
+
+        //set layout for save btn: blue
+        dialogBtnSave.setFillet(true);
+        dialogBtnSave.setRadius(13);
+        dialogBtnSave.setBackColor(getResources().getColor(R.color.dialog_blue));
+        dialogBtnSave.setBackColorSelected(getResources().getColor(R.color.dialog_blue_press));
+        dialogBtnSave.setTextColori(getResources().getColor(R.color.white));
+        dialogBtnSave.setText(getResources().getString(R.string.save));
+        //set layout for delete btn: red
+        dialogBtnDelete.setFillet(true);
+        dialogBtnDelete.setRadius(13);
+        dialogBtnDelete.setBackColor(getResources().getColor(R.color.dialog_red));
+        dialogBtnDelete.setBackColorSelected(getResources().getColor(R.color.dialog_red_press));
+        dialogBtnDelete.setTextColori(getResources().getColor(R.color.white));
+        dialogBtnDelete.setText(getResources().getString(R.string.delete));
+        //set layout for cancel btn: gray
+        dialogBtnCancel.setFillet(true);
+        dialogBtnCancel.setRadius(13);
+        dialogBtnCancel.setBackColor(getResources().getColor(R.color.dialog_gray));
+        dialogBtnCancel.setBackColorSelected(getResources().getColor(R.color.dialog_gray_press));
+        dialogBtnCancel.setTextColori(getResources().getColor(R.color.white));
+        dialogBtnCancel.setText(getResources().getString(R.string.cancel));
 
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));
@@ -199,7 +222,13 @@ public class QolSurveyActivity extends AppCompatActivity implements
     private void showSendDialog() {
         //加载布局并初始化组件
         View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_onebtn_dialog,null);
-        Button dialogBtnOk = (Button) dialogView.findViewById(R.id.btn_ok);
+        MyRoundCornerButton dialogBtnOk = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_ok);
+        dialogBtnOk.setFillet(true);
+        dialogBtnOk.setRadius(13);
+        dialogBtnOk.setBackColor(getResources().getColor(R.color.dialog_yellow));
+        dialogBtnOk.setBackColorSelected(getResources().getColor(R.color.dialog_yellow_press));
+        dialogBtnOk.setTextColori(getResources().getColor(R.color.black));
+        dialogBtnOk.setText(getResources().getString(R.string.ok));
 
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));

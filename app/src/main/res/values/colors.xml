@@ -10,7 +10,14 @@
     <color name="black">#000000</color>
     <color name="red">#ff0000</color>
     <color name="gray">#b5b5b5</color>
-    <color name="yellow">#ffffbb33</color>
+    <color name="dialog_yellow">#f8d34a</color>
+    <color name="dialog_yellow_press">#d2b446</color>
+    <color name="dialog_blue">#3965b9</color>
+    <color name="dialog_blue_press">#4161a0</color>
+    <color name="dialog_red">#ea3323</color>
+    <color name="dialog_red_press">#d4473b</color>
+    <color name="dialog_gray">#807f80</color>
+    <color name="dialog_gray_press">#666566</color>
     <color name="bssDateBg">#406171</color>
     <color name="bssDateTxt">#e4a354</color>
     <color name="bssRateBtn">#f29b5f</color>
@@ -18,7 +25,8 @@
     <color name="wvDateTxt">#437eb5</color>
     <color name="wvInputGreen">#65c979</color>
     <color name="wvInputInvalidRed">#d65946</color>
-    <color name="alertRed">#b13634</color>
+    <color name="wv_dialog_red">#b13634</color>
+    <color name="wv_dialog_red_press">#a53432</color>
     <color name="colorPoo">#ffb201</color>
     <color name="colorRun">#9048ae</color>
     <color name="colorHeart">#dd5b61</color>

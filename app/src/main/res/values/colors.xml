@@ -23,6 +23,8 @@
     <color name="colorRun">#9048ae</color>
     <color name="colorHeart">#dd5b61</color>
     <color name="colorDice">#18a88a</color>
+    <color name="qolChartTopBtn1">#925cb0</color>
+    <color name="qolChartTopBtn2">#102132</color>
 
 </resources>
 

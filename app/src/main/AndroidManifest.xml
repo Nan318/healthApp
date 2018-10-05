@@ -14,6 +14,8 @@
         </activity>
         <activity android:name=".BssSurveyActivity"></activity>
         <activity android:name=".MainMenu">
+        </activity>
+        <activity android:name=".TestMyButton">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

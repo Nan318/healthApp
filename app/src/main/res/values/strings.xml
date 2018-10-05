@@ -16,6 +16,9 @@
     <string name="incomplete_txt">All fields are mandatory.</string>
     <string name="ok">Ok</string>
     <string name="notice_txt">The current editing survey has not been saved, do you want to save it?</string>
+    <string name="chart_week">Last Week</string>
+    <string name="chart_month">Last Month</string>
+    <string name="chart_all">All</string>
     <string name="qol_surAnswer_not">Not at All</string>
     <string name="qol_surAnswer_little">A Little</string>
     <string name="qol_surAnswer_bit">Quite a Bit</string>
@@ -99,5 +102,6 @@
     <string name="dice">&#xe630;</string>
     <string name="catalog">&#xe610;</string>
     <string name="inbox">&#xe6f0;</string>
+
 
 </resources>

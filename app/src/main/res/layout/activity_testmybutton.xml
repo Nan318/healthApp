@@ -49,4 +49,52 @@
             android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/qolChartTopBtn2"
+        android:orientation="horizontal">
+
+        <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
+            android:id="@+id/btn4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
+
+        <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
+            android:id="@+id/btn5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
+
+        <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
+            android:id="@+id/btn6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
+
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_gravity="center"
+            android:layout_weight="6"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:gravity="center_vertical|center"
+            android:text="@string/icon_date"
+            android:textColor="@drawable/selector_color_purple_red"
+            android:textSize="17sp" />
+    </LinearLayout>
+
 </LinearLayout>

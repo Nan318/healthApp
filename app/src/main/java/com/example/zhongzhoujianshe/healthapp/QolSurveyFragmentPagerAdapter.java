@@ -54,17 +54,17 @@ public class QolSurveyFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: // Fragment # 0 - This will show FirstFragment
+            case 0: // Fragment # 0 - This will show the first page
                 return QolSurveyFragment.newInstance(fragment1_title, questionList1, result);
-            case 1: // Fragment # 0 - This will show FirstFragment different title
+            case 1: // Fragment # 1 - This will show the second page
                 return QolSurveyFragment.newInstance(fragment2_title, questionList2, result);
-            case 2: // Fragment # 1 - This will show SecondFragment
+            case 2: // Fragment # 2 - This will show the third page
                 return QolSurveyFragment.newInstance(fragment3_title, questionList3, result);
-            case 3: // Fragment # 0 - This will show FirstFragment
+            case 3: // Fragment # 3 - This will show the fourth page
                 return QolSurveyFragment.newInstance(fragment4_title, questionList4, result);
-            case 4: // Fragment # 0 - This will show FirstFragment different title
+            case 4: // Fragment # 4 - This will show the fifth page
                 return QolSurveyFragment.newInstance(fragment5_title, questionList5, result);
-            case 5: // Fragment # 1 - This will show SecondFragment
+            case 5: // Fragment # 5 - This will show the sixth page
                 return QolSurveyFragment.newInstance(fragment6_title, questionList6, result);
             default:
                 return null;

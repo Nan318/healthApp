@@ -6,22 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/shadow_corner"
+    android:background="@drawable/shadow_round_rectangle"
     android:gravity="center"
-    android:orientation="vertical"
-    android:padding="6dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="38dp"
         android:background="@drawable/qol_topcorner_round"
-        android:gravity="center_horizontal|center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+        android:gravity="center"
         android:text="@string/qol_q1_10"
         android:textColor="@android:color/background_light"
         android:textSize="16sp"

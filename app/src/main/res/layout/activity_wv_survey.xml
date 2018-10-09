@@ -87,7 +87,7 @@
             android:format24Hour="dd/MMM/yyyy HH:mm"
             android:gravity="center"
             android:paddingBottom="3dp"
-            android:textColor="@color/bssDateTxt"
+            android:textColor="@color/wvDateTxt"
             android:textSize="12sp" />
 
         <TextView

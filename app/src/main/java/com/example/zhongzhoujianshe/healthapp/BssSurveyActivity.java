@@ -121,9 +121,9 @@ public class BssSurveyActivity extends AppCompatActivity{
         viewpager.setCurrentItem((imageViewList.size()) * 100);
         //viewpager.setOffscreenPageLimit(7);
         /*setOffscreenPageLimit(int limit):
-        * Set the number of pages that should be retained to either side of the current page
-        * in the view hierarchy in an idle state.
-        * */
+         * Set the number of pages that should be retained to either side of the current page
+         * in the view hierarchy in an idle state.
+         * */
 
         //seekbar
         bss_type = (TickSeekBar) findViewById(R.id.seekbar_bss_type);

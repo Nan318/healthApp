@@ -7,4 +7,7 @@
     <string name="icon_back">&#xe60b;Back</string>
     <string name="icon_date">&#xe644;</string>
     <string name="icon_date_txt">&#xe644; Date and time of response</string>
+    <string name="icon_weight">&#xe631;</string>
+    <string name="icon_height">&#xe657;</string>
+    <string name="icon_bmi">&#xe7b5;</string>
 </resources>

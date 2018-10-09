@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="MyEditText">
+        <!--all texts share the same size
+        <attr name="text_size" format="integer" />
+        -->
+        <attr name="top_title" format="string" />  <!--e.g. HEIGHT (CM), gray  -->
+        <attr name="top_note_normal" format="string" />  <!--e.g. ENTER YOUR HEIGHT, blue -->
+        <!-- default: INVALID NUMBER, red
+        <attr name="top_note_invalid" format="string" />
+        -->
+        <attr name="left_icon" format="string" />  <!-- icon font: blue(original)/ green(input)/ red(invalid)  -->
+        <attr name="input_hint" format="string" />  <!--e.g. Weight (kg), gray  -->
+        <attr name="editable" format="boolean" /> <!--false: used to show BMI  -->
+    </declare-styleable>
 
 </resources>

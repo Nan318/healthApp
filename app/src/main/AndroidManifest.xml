@@ -13,17 +13,19 @@
 
         </activity>
         <activity android:name=".BssSurveyActivity">
+
+        </activity>
+        <activity android:name=".MainMenu"></activity>
+        <activity android:name=".TestMyButton">
+
+        </activity>
+        <activity android:name=".WvSurveyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenu"></activity>
-        <activity android:name=".TestMyButton">
-
-        </activity>
-        <activity android:name=".WvSurveyActivity"></activity>
     </application>
 
 </manifest>

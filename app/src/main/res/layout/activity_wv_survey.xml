@@ -50,4 +50,92 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:background="@drawable/round_rectangle_shadow"
+        android:orientation="vertical"
+        android:padding="0dip">
+
+        <TextView
+            android:id="@+id/date_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/wv_topcorner_round"
+            android:gravity="center_horizontal|center"
+            android:paddingBottom="3dp"
+            android:paddingTop="4dp"
+            android:text="@string/icon_date_txt"
+            android:textColor="@android:color/background_light"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            tools:layout_width="match_parent"
+            tools:textColor="#ffffff" />
+
+        <TextClock
+            android:id="@+id/text_clock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:background="@color/wvDateBg"
+            android:format24Hour="dd/MMM/yyyy HH:mm"
+            android:gravity="center"
+            android:paddingBottom="3dp"
+            android:textColor="@color/bssDateTxt"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:gravity="center"
+            android:text="@string/wv_new_note"
+            android:textColor="@android:color/black" />
+
+        <com.example.zhongzhoujianshe.healthapp.MyEditText
+            android:id="@+id/et_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="0"
+            app:input_hint="@string/wv_new_txt_hintw"
+            app:left_icon="@string/icon_weight"
+            app:top_note_normal="@string/wv_new_top_enterw"
+            app:top_title="@string/wv_new_topw" />
+
+        <com.example.zhongzhoujianshe.healthapp.MyEditText
+            android:id="@+id/et_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0"
+            app:input_hint="@string/wv_new_txt_hinth"
+            app:left_icon="@string/icon_height"
+            app:top_note_normal="@string/wv_new_top_enterh"
+            app:top_title="@string/wv_new_toph" />
+
+        <com.example.zhongzhoujianshe.healthapp.MyEditText
+            android:id="@+id/et_bmi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="0"
+            app:editable="false"
+            app:input_hint="@string/wv_new_txt_hintb"
+            app:left_icon="@string/icon_bmi"
+            app:top_title="@string/wv_new_txt_hintb" />
+
+    </LinearLayout>
+
 </LinearLayout>

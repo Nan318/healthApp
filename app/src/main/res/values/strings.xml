@@ -96,6 +96,15 @@
     <string name="bss_new_type7">Type 7</string>
     <string name="bss_new_type7_txt">Watery, no solid pieces, entirely liquid</string>
     <string name="wv_new_toolbar_title">New Weekly Vitals</string>
+    <string name="wv_new_note">Track your health vitals and see them all in one place</string>
+    <string name="wv_new_topw">WEIGHT (KG)</string>
+    <string name="wv_new_toph">HEIGHT (CM)</string>
+    <string name="wv_new_top_enterw">ENTER YOUR WEIGHT</string>
+    <string name="wv_new_top_enterh">ENTER YOUR HEIGHT</string>
+    <string name="wv_new_top_invalid">INVALID NUMBER</string>
+    <string name="wv_new_txt_hintw">Weight (kg)</string>
+    <string name="wv_new_txt_hinth">Height (cm)</string>
+    <string name="wv_new_txt_hintb">BMI</string>
     <string name="aaa">&#xe67a;</string>
     <string name="run">&#xe603;</string>
     <string name="poo">&#xe67a;</string>

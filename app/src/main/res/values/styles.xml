@@ -23,6 +23,9 @@
         <item name="colorControlNormal">@color/radiobutton</item>
         <item name="colorControlActivated">@color/radiobutton</item>
     </style>
-
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">@color/wvDateTxt</item>
+    </style>
 
 </resources>

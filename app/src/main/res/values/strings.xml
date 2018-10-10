@@ -15,7 +15,8 @@
     <string name="incomplete">Incomplete</string>
     <string name="incomplete_txt">All fields are mandatory.</string>
     <string name="ok">OK</string>
-    <string name="notice_txt">The current editing survey has not been saved, do you want to save it?</string>
+    <string name="notice_txt">The current editing survey has not been saved, do you want to save
+        it?</string>
     <string name="chart_week">Last Week</string>
     <string name="chart_month">Last Month</string>
     <string name="chart_all">All</string>
@@ -29,13 +30,18 @@
     <string name="qol_q31_40">Question 31 - 40</string>
     <string name="qol_q41_49">Question 41 - 49</string>
     <string name="qol_q50_51">Question 50 - 51</string>
-    <string name="qol_q1">. Do you have any trouble doing strenuous activities, like carrying a heavy shopping bag or a suitcase?</string>
+    <string name="qol_q1">. Do you have any trouble doing strenuous activities, like carrying a
+        heavy shopping bag or a suitcase?</string>
     <string name="qol_q2">. Do you have any trouble taking a long walk?</string>
-    <string name="qol_q3">. Do you have any trouble taking a short walk outside of the house?</string>
+    <string name="qol_q3">. Do you have any trouble taking a short walk outside of the house
+        ?</string>
     <string name="qol_q4">. Do you need to stay in bed or chair during the day?</string>
-    <string name="qol_q5">. Do you need any help with eating, dressing, washing yourself or using the toilet?</string>
-    <string name="qol_q6">. Were you limited in doing either your work or other daily activities?</string>
-    <string name="qol_q7">. Were you limited in pursuing your hobbies or other leisure time activities?</string>
+    <string name="qol_q5">. Do you need any help with eating, dressing, washing yourself or using
+        the toilet?</string>
+    <string name="qol_q6">. Were you limited in doing either your work or other daily activities
+        ?</string>
+    <string name="qol_q7">. Were you limited in pursuing your hobbies or other leisure time
+        activities?</string>
     <string name="qol_q8">. Were you short of breath?</string>
     <string name="qol_q9">. Have you had pain?</string>
     <string name="qol_q10">. Did you need to rest?</string>
@@ -48,19 +54,26 @@
     <string name="qol_q17">. Have you had diarrhea?</string>
     <string name="qol_q18">. Were you tired?</string>
     <string name="qol_q19">. Did pain interfere with your daily activities?</string>
-    <string name="qol_q20">. Have you had difficulty in concentrating on things, like reading a newspaper or watching television?</string>
+    <string name="qol_q20">. Have you had difficulty in concentrating on things, like reading a
+        newspaper or watching television?</string>
     <string name="qol_q21">. Did you feel tense?</string>
     <string name="qol_q22">. Did you worry?</string>
     <string name="qol_q23">. Did you feel irritable?</string>
     <string name="qol_q24">. Did you feel depressed?</string>
     <string name="qol_q25">. Have you had difficulty remembering things?</string>
-    <string name="qol_q26">. Has your physical condition or medical treatment interfered with your family life?</string>
-    <string name="qol_q27">. Has your physical condition or medical treatment interfered with your social activities?</string>
-    <string name="qol_q28">. Has your physical condition or medical treatment interfered with your financial condition?</string>
-    <string name="qol_q29">. Have you had problems receiving adequate information about disease and treatment?</string>
-    <string name="qol_q30">. Has the disease or treatment affected your sex life (for the worse)?</string>
+    <string name="qol_q26">. Has your physical condition or medical treatment interfered with your
+        family life?</string>
+    <string name="qol_q27">. Has your physical condition or medical treatment interfered with your
+        social activities?</string>
+    <string name="qol_q28">. Has your physical condition or medical treatment interfered with your
+        financial condition?</string>
+    <string name="qol_q29">. Have you had problems receiving adequate information about disease and
+        treatment?</string>
+    <string name="qol_q30">. Has the disease or treatment affected your sex life (for the worse)
+        ?</string>
     <string name="qol_q31">. Did you have hot flushes?</string>
-    <string name="qol_q32">. Have you noticed or been told by others that you looked flushed/red?</string>
+    <string name="qol_q32">. Have you noticed or been told by others that you looked flushed/red
+        ?</string>
     <string name="qol_q33">. Did you have night sweats?</string>
     <string name="qol_q34">. Have you abdominal discomfort?</string>
     <string name="qol_q35">. Did you have a bloated feeling in your abdomen?</string>
@@ -69,20 +82,24 @@
     <string name="qol_q38">. Have you had difficulties with eating?</string>
     <string name="qol_q39">. Have you had side-effects from your treatment?</string>
     <string name="qol_q40">. Have you had a problem from repeated injections?</string>
-    <string name="qol_q41">. Were you worried about the tumour recurring in other areas of the body?</string>
+    <string name="qol_q41">. Were you worried about the tumour recurring in other areas of the
+        body?</string>
     <string name="qol_q42">. Were you concerned about disruption of home life?</string>
     <string name="qol_q43">. Have you worried about your health in the future?</string>
-    <string name="qol_q44">. How distressing has your illness or treatment been to those close to you?</string>
+    <string name="qol_q44">. How distressing has your illness or treatment been to those close to
+        you?</string>
     <string name="qol_q45">. Has weight loss been a problem for you?</string>
     <string name="qol_q46">. Has weight gain been a problem for you?</string>
     <string name="qol_q47">. Did you worry about the results of your tests?</string>
     <string name="qol_q48">. Have you had aches or pains in your muscles or bones?</string>
     <string name="qol_q49">. Did you have any limitations in your ability to travel?</string>
     <string name="qol_q50">. How would you rate your overall health during the past week?</string>
-    <string name="qol_q51">. How would you rate your overall quality of life during the past week?</string>
+    <string name="qol_q51">. How would you rate your overall quality of life during the past week
+        ?</string>
     <string name="bss_new_body_title">Which type (1-7) best describes your current faeces?</string>
     <string name="bss_new_type1">Type 1</string>
-    <string name="bss_new_type1_txt">Separate hard lumps, like nuts (hard to pass); also known as goat faeces</string>
+    <string name="bss_new_type1_txt">Separate hard lumps, like nuts (hard to pass); also known as
+        goat faeces</string>
     <string name="bss_new_type2">Type 2</string>
     <string name="bss_new_type2_txt">Sausage-shaped, but lumpy</string>
     <string name="bss_new_type3">Type 3</string>
@@ -105,6 +122,24 @@
     <string name="wv_new_txt_hintw">Weight (kg)</string>
     <string name="wv_new_txt_hinth">Height (cm)</string>
     <string name="wv_new_txt_hintb">BMI</string>
+    <string name="ecog_new_top_note">Press on the number to see the level that best describes your
+        ECOG performance scale.</string>
+    <string name="ecog_new_scale0">Fully active, able to carry on all pre-disease performance
+        without restriction</string>
+    <string name="ecog_new_scale1">Restricted in physically strenuous activity but ambulatory and
+        able to carry out work of a light or sedentary nature, e.g. light house work, office
+        work</string>
+    <string name="ecog_new_scale2">Ambulatory and capable of all selfcare but unable to carry out
+        any work activities. Up and about more than 50% of waking hours</string>
+    <string name="ecog_new_scale3">Capable of only limited selfcare, confined to bed or chair more
+        than 50% of waking hours</string>
+    <string name="ecog_new_scale4">Completely disabled. Cannot carry on any selfcare. Totally
+        confined to bed or chair</string>
+    <string name="ecog_new_bottom_note">* The ECOG performance scale is a measurement used to
+        describe a patient\'s level of functioning in regard to your ability to care for yourself,
+        daily activity and physical ability (talking, walking etc). This measurement is used to
+        assess your ability to participate in clinical trials</string>
+    <string name="ecog_new_alertmsg">Please choose one scale!</string>
     <string name="aaa">&#xe67a;</string>
     <string name="run">&#xe603;</string>
     <string name="poo">&#xe67a;</string>

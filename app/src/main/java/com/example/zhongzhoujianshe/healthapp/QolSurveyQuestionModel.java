@@ -22,6 +22,7 @@ public class QolSurveyQuestionModel implements Parcelable {
     private String question;
     private String[] answerOption;
     private int questionId;
+    private int answer;
 
     public QolSurveyQuestionModel() {
         super();
@@ -65,6 +66,12 @@ public class QolSurveyQuestionModel implements Parcelable {
         this.answerOption = answerOption;
     }
 
+    public void setAnswer(int answer){
+        this.answer = answer;
+    }
+    public int getAnswer(){
+        return answer;
+    }
     //内容描述接口，基本不用管
     @Override
     public int describeContents() {
@@ -86,6 +93,7 @@ public class QolSurveyQuestionModel implements Parcelable {
             parcel.writeInt(answerOption.length);
             parcel.writeStringArray(answerOption);
         }
+        parcel.writeInt(answer);
 
 
     }
@@ -103,6 +111,7 @@ public class QolSurveyQuestionModel implements Parcelable {
             answerOption = new String[length];
             source.readStringArray(answerOption);
         }
+        answer = source.readInt();
     }
     public static final Parcelable.Creator<QolSurveyQuestionModel> CREATOR = new Creator(){
 

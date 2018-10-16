@@ -1,12 +1,18 @@
 package com.example.zhongzhoujianshe.healthapp;
 
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,10 +23,20 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-// set iconfont
+        //check for user authorization
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentFirebaseUser == null){
+            Intent intent = new Intent();
+            intent.setClass(MainMenu.this, LoginActivity.class);
+            //intent.putExtra("Name", "feng88724");
+            startActivity(intent);
+        }
+
+
+        // set iconfont
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");//记得加上这句
 
-       /* Button bbb = (Button) findViewById(R.id.button);
+        /* Button bbb = (Button) findViewById(R.id.button);
         bbb.setTypeface(font);*/
 
         TextView run = (TextView) findViewById(R.id.runtext);
@@ -36,7 +52,35 @@ public class MainMenu extends AppCompatActivity {
         TextView inbox= (TextView) findViewById(R.id.inbox);
         inbox.setTypeface(font);
 
+        /* * * * * go to function pages * * * * * */
 
+        ConstraintLayout qol = (ConstraintLayout) findViewById(R.id.first);
+        qol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainMenu.this, QolSurveyActivity.class);
+                startActivity(intent);
+            }
+        });
+        ConstraintLayout bss = (ConstraintLayout) findViewById(R.id.second);
+        bss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainMenu.this, BssSurveyActivity.class);
+                startActivity(intent);
+            }
+        });
+        ConstraintLayout ecog = (ConstraintLayout) findViewById(R.id.fourth);
+        ecog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainMenu.this, EcogSurveyActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 

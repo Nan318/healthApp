@@ -1,6 +1,7 @@
 package com.example.zhongzhoujianshe.healthapp;
 
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.warkiz.tickseekbar.OnSeekChangeListener;
 import com.warkiz.tickseekbar.SeekParams;
 import com.warkiz.tickseekbar.TickSeekBar;
@@ -18,10 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BssSurveyActivity extends AppCompatActivity{
-    //UI Objects
-    //private AlertDialog alert = null;
-    //private AlertDialog.Builder builder = null;
-
     //UI objects
     //toolbar part
     private Toolbar toolbar;
@@ -33,11 +38,16 @@ public class BssSurveyActivity extends AppCompatActivity{
     private TickSeekBar bss_type;
     private TextView txt_type;
     private TextView txt_type_note;
-
-
+    //firebase
+    private String currentUserId;
+    private DatabaseReference mRoot;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    //varialbe
+    private int answer = -1;
+    private EcogAndBssAnswerModel bssAnswer;
     //bss pictures to be selected
     private List<ImageView> imageViewList;
-
     private int[] imgId = {R.drawable.bsstype1, R.drawable.bsstype2, R.drawable.bsstype3,
             R.drawable.bsstype4, R.drawable.bsstype5, R.drawable.bsstype6, R.drawable.bsstype7};
     private int[] imgTitle = {R.string.bss_new_type1, R.string.bss_new_type2, R.string.bss_new_type3,
@@ -46,21 +56,57 @@ public class BssSurveyActivity extends AppCompatActivity{
     private int[] imgTxt = {R.string.bss_new_type1_txt, R.string.bss_new_type2_txt, R.string.bss_new_type3_txt,
             R.string.bss_new_type4_txt, R.string.bss_new_type5_txt, R.string.bss_new_type6_txt,
             R.string.bss_new_type7_txt};
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bss_survey);
 
-        //initialize view
+        /* * * * * firebase * * * * * */
+        //get Uid
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    currentUserId = user.getUid();
+                }
+            }
+        };
+
+        /* * * * * initialize view  * * * * * */
         iniView();
 
-        //event
-        /* * * * * toolbar * * * * * */
+        /* * * * * set click event * * * * * */
 
+
+        txt_menu_send.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                if(answer != -1){
+                    sendData();
+                } else {
+                }
+
+            }
+        });
         //back text_btn
         txt_menu_back.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext() , "backBtn" , Toast.LENGTH_SHORT).show();
+                BssSurveyActivity.this.finish();
             }
         });
 
@@ -74,7 +120,38 @@ public class BssSurveyActivity extends AppCompatActivity{
         bss_type.setOnSeekChangeListener(seekListener);
 
     }
+    private void sendData(){
+        String date = "2018-10-10-11-35";
+        //send data
+        mRoot = FirebaseDatabase.getInstance().getReference();
+        //通过键名，获取数据库实例对象的子节点对象
+        final DatabaseReference userRef = mRoot.child(currentUserId).child("bss");
+        bssAnswer = new EcogAndBssAnswerModel();
+        bssAnswer.setTime(date);
+        bssAnswer.setType(answer);
 
+        Query checkUnique = userRef.orderByChild("time").equalTo(date);
+        checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) { //update existing data
+                    DataSnapshot nodeDataSnapshot = dataSnapshot.getChildren().iterator().next();
+                    String key = nodeDataSnapshot.getKey(); // this key is the eid of the existing data
+                    userRef.child(key).child("type").setValue(answer);
+                    Toast.makeText(getApplicationContext() , "Updated ~" , Toast.LENGTH_SHORT).show();
+                } else { //add new data
+                    userRef.push().setValue(bssAnswer);
+                    Toast.makeText(getApplicationContext() , "Added ~" , Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException(); // don't ignore errors
+            }
+        });
+
+    }
     private void iniView(){
         /* * * * * toolbar * * * * * */
 
@@ -139,6 +216,7 @@ public class BssSurveyActivity extends AppCompatActivity{
         @Override
         public void onPageSelected(int position) {
             int index = position % imageViewList.size();
+            answer = index + 1;
             txt_type.setText(imgTitle[index]);
             txt_type_note.setText(imgTxt[index]);
             bss_type.setOnSeekChangeListener(null);
@@ -157,6 +235,7 @@ public class BssSurveyActivity extends AppCompatActivity{
         public void onSeeking(SeekParams seekParams) {
             String progress = seekParams.tickText;
             int progressi = Integer.parseInt(progress);
+            answer = progressi;
             int index = progressi - 1;  //the real index of arrays (imgTitle[] & imgTxt[])
             int imgPosition = (imageViewList.size()) * 100; //set the position of the 1st image
             txt_type.setText(imgTitle[index]);

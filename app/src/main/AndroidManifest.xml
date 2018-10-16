@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.zhongzhoujianshe.healthapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -9,14 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".QolSurveyActivity"></activity>
-        <activity android:name=".BssSurveyActivity"></activity>
+        <activity android:name=".QolSurveyActivity" />
+        <activity android:name=".BssSurveyActivity" />
         <activity android:name=".MainMenu" />
-        <activity android:name=".TestMyButton"></activity>
-        <activity android:name=".WvSurveyActivity">
+        <activity android:name=".TestMyButton" />
+        <activity android:name=".WvSurveyActivity" />
+        <activity android:name=".EcogSurveyActivity">
 
         </activity>
-        <activity android:name=".EcogSurveyActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -11,4 +11,5 @@
     <string name="icon_weight">&#xe631;</string>
     <string name="icon_height">&#xe657;</string>
     <string name="icon_bmi">&#xe7b5;</string>
+    <string name="icon_login">&#xe604;</string>
 </resources>

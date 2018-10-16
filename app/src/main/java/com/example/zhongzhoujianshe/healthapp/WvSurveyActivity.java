@@ -60,7 +60,7 @@ public class WvSurveyActivity extends AppCompatActivity{
         });
         txt_menu_back.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext() , "backBtn" , Toast.LENGTH_SHORT).show();
+                WvSurveyActivity.this.finish();
             }
         });
 

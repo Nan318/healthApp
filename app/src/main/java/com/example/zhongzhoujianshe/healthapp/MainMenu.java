@@ -68,7 +68,16 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(MainMenu.this, BssSurveyActivity.class);
+                intent.setClass(MainMenu.this, BssChartActivity.class);
+                startActivity(intent);
+            }
+        });
+        ConstraintLayout wv = (ConstraintLayout) findViewById(R.id.third);
+        wv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainMenu.this, WvChartActivity.class);
                 startActivity(intent);
             }
         });
@@ -77,7 +86,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(MainMenu.this, EcogSurveyActivity.class);
+                intent.setClass(MainMenu.this, EcogChartActivity.class);
                 startActivity(intent);
             }
         });

@@ -93,7 +93,6 @@ public class BssSurveyActivity extends AppCompatActivity{
 
         /* * * * * set click event * * * * * */
 
-
         txt_menu_send.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 if(answer != -1){

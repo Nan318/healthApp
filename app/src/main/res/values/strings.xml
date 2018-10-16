@@ -102,6 +102,7 @@
     <string name="qol_q50">. How would you rate your overall health during the past week?</string>
     <string name="qol_q51">. How would you rate your overall quality of life during the past week
         ?</string>
+    <string name="bss">Bristol Stool Scale</string>
     <string name="bss_new_body_title">Which type (1-7) best describes your current faeces?</string>
     <string name="bss_new_type1">Type 1</string>
     <string name="bss_new_type1_txt">Separate hard lumps, like nuts (hard to pass); also known as
@@ -118,6 +119,7 @@
     <string name="bss_new_type6_txt">Fluffy pieces with ragged edges, a mushy stool</string>
     <string name="bss_new_type7">Type 7</string>
     <string name="bss_new_type7_txt">Watery, no solid pieces, entirely liquid</string>
+    <string name="wv">Weekly Vitals</string>
     <string name="wv_new_toolbar_title">New Weekly Vitals</string>
     <string name="wv_new_note">Track your health vitals and see them all in one place</string>
     <string name="wv_new_topw">WEIGHT (KG)</string>
@@ -128,6 +130,7 @@
     <string name="wv_new_txt_hintw">Weight (kg)</string>
     <string name="wv_new_txt_hinth">Height (cm)</string>
     <string name="wv_new_txt_hintb">BMI</string>
+    <string name="ecog">ECOG</string>
     <string name="ecog_new_top_note">Press on the number to see the level that best describes your
         ECOG performance type.</string>
     <string name="ecog_new_scale0">Fully active, able to carry on all pre-disease performance

@@ -151,7 +151,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                     holder1.radioButton_12.setChecked(false);
                     holder1.radioButton_21.setChecked(false);
                     holder1.radioButton_22.setChecked(false);
-                    //3.根据选择情况显示选择答案
+                    //3.check radiobtn according to the checked answer
                     switch (currentQuestion.getAnswer()) {
                         case 11:
                             holder1.mRadioGroup.check(R.id.rb_11);
@@ -169,7 +169,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                             break;
                     }
 
-                    //4.重新注册监听
+                    //4. re-register listener
                     //get the checked option of mRadioGroup in viewHolder1 (1/4)
                     if (holder1.mRadioGroup != null){
                         holder1.mRadioGroup.setOnCheckedChangeListener(new MyMultipleLineRadioGroup.OnCheckedChangeListener() {
@@ -191,9 +191,10 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                                         p=22;
                                         break;
                                 }
-                                //把选择了的答案记录回到ListView的集合中，以便滑动时给对应的RadioGroup赋值
+                                // record the selected answer,
+                                // so that it can be set to radiogroup while sliding
                                 qolQuestionList.get(position).setAnswer(p);
-                                //测试选择答案正确性
+                                //test right or not
                                 for(QolSurveyQuestionModel title:qolQuestionList){
                                     if(title.getAnswer()>0)
                                         Log.e("TAG",title.getQuestionId()+"---"+title.getAnswer());

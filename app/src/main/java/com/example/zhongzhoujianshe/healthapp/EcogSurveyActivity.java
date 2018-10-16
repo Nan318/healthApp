@@ -30,7 +30,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_send;
-    //dody part
+    //body part
     private TextView txt_date;
     private RadioGroup radioGroup;
     private TextView scale_note;
@@ -42,6 +42,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
     //varialbe
     private int answer = -1;
     private EcogAndBssAnswerModel ecogAnswer;
+
     @Override
     public void onStart() {
         super.onStart();

@@ -59,7 +59,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(MainMenu.this, QolSurveyActivity.class);
+                intent.setClass(MainMenu.this, QolChartActivity.class);
                 startActivity(intent);
             }
         });

@@ -12,4 +12,7 @@
     <string name="icon_height">&#xe657;</string>
     <string name="icon_bmi">&#xe7b5;</string>
     <string name="icon_login">&#xe604;</string>
+    <string name="icon_cog">&#xe65a;</string>
+    <string name="icon_new">&#xe747;New</string>
+
 </resources>

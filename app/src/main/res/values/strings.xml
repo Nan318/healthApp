@@ -25,6 +25,7 @@
     <string name="chart_week">Last Week</string>
     <string name="chart_month">Last Month</string>
     <string name="chart_all">All</string>
+    <string name="qol">Quality of Life</string>
     <string name="qol_surAnswer_not">Not at All</string>
     <string name="qol_surAnswer_little">A Little</string>
     <string name="qol_surAnswer_bit">Quite a Bit</string>

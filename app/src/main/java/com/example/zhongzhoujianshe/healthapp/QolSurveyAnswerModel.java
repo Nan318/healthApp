@@ -13,13 +13,11 @@ public class QolSurveyAnswerModel implements Parcelable {
         super();
     }
 
-    public QolSurveyAnswerModel(String date) {
-        super();
-        this.date = date;
-
-    }
-    public String getSurveyDate() {
+    public String getDate() {
         return date;
+    }
+    public void setDate(String date){
+        this.date = date;
     }
 
     //get the answers

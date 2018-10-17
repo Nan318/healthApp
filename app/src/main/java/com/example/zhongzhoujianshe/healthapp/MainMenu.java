@@ -24,14 +24,14 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         //check for user authorization
+        /*
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentFirebaseUser == null){
             Intent intent = new Intent();
             intent.setClass(MainMenu.this, LoginActivity.class);
             //intent.putExtra("Name", "feng88724");
             startActivity(intent);
-        }
-
+        }*/
 
         // set iconfont
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");//记得加上这句

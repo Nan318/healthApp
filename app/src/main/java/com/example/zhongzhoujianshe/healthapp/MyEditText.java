@@ -183,6 +183,12 @@ public class MyEditText extends LinearLayout {
         return et_input.getText().toString();
 
     }
+    public boolean isEmpty() {
+        if (getEtText().trim().length() > 0)
+            return false;
+
+        return true;
+    }
 
 
 }

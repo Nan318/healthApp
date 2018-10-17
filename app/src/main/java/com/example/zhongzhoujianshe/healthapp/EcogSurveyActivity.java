@@ -130,6 +130,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
             @Override public void onClick(View view) {
                 if(answer != -1){
                     sendData();
+                    EcogSurveyActivity.this.finish();
                 } else {
                     showSendDialog();
                 }

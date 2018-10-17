@@ -195,10 +195,11 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                                 // so that it can be set to radiogroup while sliding
                                 qolQuestionList.get(position).setAnswer(p);
                                 //test right or not
+                                /*
                                 for(QolSurveyQuestionModel title:qolQuestionList){
                                     if(title.getAnswer()>0)
                                         Log.e("TAG",title.getQuestionId()+"---"+title.getAnswer());
-                                }
+                                }*/
                                 RadioButton selectedbtn = (RadioButton) group.findViewById(checkedId);
                                 answer = selectedbtn.getText().toString();
                                 questionId = qolQuestionList.get(position).getQuestionId();

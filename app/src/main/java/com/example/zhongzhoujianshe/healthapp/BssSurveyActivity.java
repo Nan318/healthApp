@@ -97,6 +97,7 @@ public class BssSurveyActivity extends AppCompatActivity{
             @Override public void onClick(View view) {
                 if(answer != -1){
                     sendData();
+                    BssSurveyActivity.this.finish();
                 } else {
                 }
 

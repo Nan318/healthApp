@@ -3,13 +3,16 @@ package com.example.zhongzhoujianshe.healthapp;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
@@ -17,9 +20,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QolSurveyActivity extends AppCompatActivity{
     //UI Objects
@@ -30,15 +40,30 @@ public class QolSurveyActivity extends AppCompatActivity{
     private TextView txt_menu_send;
     private TextView txt_menu_back;
     private Toolbar toolbar;
+    private ListView listView;
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    //varialbe
-    private QolSurveyAnswerModel qolResult = new QolSurveyAnswerModel("4");
+    //varialbes
+    private QolSurveyAnswerModel qolResult = new QolSurveyAnswerModel();
+    private int minIndex = 0; //start from the first question
+    private int minId = 1;
+    private String date;
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +91,6 @@ public class QolSurveyActivity extends AppCompatActivity{
         txt_menu_send.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 if(qolResult.getResults().size()<51){
-
                     //Toast.makeText(getApplicationContext(), "finish"+qolResult.getResults().size(), Toast.LENGTH_LONG).show();
                     showSendDialog();
                 }else if(qolResult.getResults().size() == 51){
@@ -202,6 +226,82 @@ public class QolSurveyActivity extends AppCompatActivity{
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "close", Toast.LENGTH_SHORT).show();
                 alert.dismiss();
+                //get current answer union
+                ArrayList<String[]> answers = qolResult.getResults();
+                //get the unanswered item which has the smallest id
+                //check which question hasn't been answered
+                //i.e. minId means the question with questionId(minId) should be answered first
+                if (answers.size() != 0){
+                    while (minIndex < answers.size()){
+                        String[] itemResult = answers.get(minIndex);
+                        int itemId = Integer.parseInt(itemResult[0]);
+                        if(itemId != minId){
+                            break;  //find the target item now
+                        }else{
+                            minIndex = minIndex + 1;
+                            minId = minId + 1;
+                        }
+                    }
+                    for(String[] itemR:answers){
+                        if(itemR.length == 2){
+                            Log.e("TAG",itemR[0]+"---"+itemR[1]); //test answers
+                        }
+                    }
+                }
+                Log.e("minid",String.valueOf(minId));  //test minId
+                //scroll to the target position
+                if (minId >= 1 && minId <=10){
+                    viewPager.setCurrentItem(0);
+                    listView = viewPager.findViewById(R.id.qol_survey_questionList);
+                    listView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.smoothScrollToPositionFromTop(minId - 1, 0);
+                        }
+                    });
+
+                }else if (minId >= 11 && minId <= 20){ //scroll not work
+                    viewPager.setCurrentItem(1);
+                    listView = viewPager.findViewById(R.id.qol_survey_questionList);
+                    listView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.smoothScrollToPositionFromTop(minId - 11, 0);
+                        }
+                    });
+                }else if (minId >= 21 && minId <= 30){//scroll not work
+                    viewPager.setCurrentItem(2);
+                    listView = viewPager.findViewById(R.id.qol_survey_questionList);
+                    listView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.smoothScrollToPositionFromTop(minId - 21, 0);
+                        }
+                    });
+                }else if (minId >= 31 && minId <= 40){//scroll not work
+                    viewPager.setCurrentItem(3);
+                    listView = viewPager.findViewById(R.id.qol_survey_questionList);
+                    listView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.smoothScrollToPositionFromTop(minId - 31, 0);
+                        }
+                    });
+                }else if (minId >= 41 && minId <= 49){//scroll not work
+                    viewPager.setCurrentItem(4);
+                    listView = viewPager.findViewById(R.id.qol_survey_questionList);
+                    listView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.smoothScrollToPositionFromTop(minId - 41, 0);
+                        }
+                    });
+                }else {
+                    viewPager.setCurrentItem(5); //only two item, no need to scroll
+
+                }
+
+
             }
         });
     }
@@ -250,8 +350,10 @@ public class QolSurveyActivity extends AppCompatActivity{
         dialogBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(QolSurveyActivity.this,"saveBtn！！",Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(QolSurveyActivity.this,"saveBtn！！",Toast.LENGTH_SHORT).show();
+                sendData();
+                alert.dismiss();
+                QolSurveyActivity.this.finish();
             }
         });
         dialogBtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -261,5 +363,49 @@ public class QolSurveyActivity extends AppCompatActivity{
                 alert.dismiss();
             }
         });
+    }
+    private void sendData(){
+        date = "2018-10-10";
+        //date = qolResult.getDate();
+        //send data
+        mRoot = FirebaseDatabase.getInstance().getReference();
+        //通过键名，获取数据库实例对象的子节点对象
+        final DatabaseReference userRef = mRoot.child(currentUserId).child("qol");
+
+        Query checkUnique = userRef.orderByChild("date").equalTo(date);
+        checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String[]> answers = qolResult.getResults();
+                if (dataSnapshot.exists()) { //update existing data
+                    DataSnapshot nodeDataSnapshot = dataSnapshot.getChildren().iterator().next();
+                    String key = nodeDataSnapshot.getKey(); // this key is the eid of the existing data
+                    for (int i=0; i< answers.size();i++){
+                        String[] itemResult = answers.get(i);
+                        String itemId = itemResult[0];
+                        String itemAnswer = itemResult[1];
+                        userRef.child(key).child(itemId).setValue(itemAnswer);
+                    }
+                    Toast.makeText(getApplicationContext() , "Updated ~" , Toast.LENGTH_SHORT).show();
+                } else { //add new data
+                    Map<String, String> qolR = new HashMap<String, String>();
+                    qolR.put("date", date);
+                    for (int i=0; i< answers.size();i++){
+                        String[] itemResult = answers.get(i);
+                        String itemId = itemResult[0];
+                        String itemAnswer = itemResult[1];
+                        qolR.put(itemId, itemAnswer);
+                    }
+                    userRef.push().setValue(qolR);
+                    Toast.makeText(getApplicationContext() , "Added ~" , Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException(); // don't ignore errors
+            }
+        });
+
     }
 }

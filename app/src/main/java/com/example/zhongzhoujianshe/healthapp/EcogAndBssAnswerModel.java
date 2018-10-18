@@ -10,7 +10,7 @@ public class EcogAndBssAnswerModel {
         return time;
     }
 
-    public float getType() {
+    public int getType() {
         return type;
     }
 

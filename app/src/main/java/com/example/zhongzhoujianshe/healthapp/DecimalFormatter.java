@@ -12,7 +12,7 @@ public class DecimalFormatter implements IAxisValueFormatter {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public DecimalFormatter() {
-        format = new DecimalFormat("0,0,0");
+        format = new DecimalFormat("0.00");
 
     }
 

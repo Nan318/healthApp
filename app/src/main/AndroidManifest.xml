@@ -20,16 +20,19 @@
         <activity android:name=".TestMyButton" />
         <activity android:name=".WvSurveyActivity" />
         <activity android:name=".EcogSurveyActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".QolChartActivity" />
+
+        <activity android:name=".BssChartActivity" />
+        <activity android:name=".WvChartActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".QolChartActivity" />
-        <activity android:name=".BssChartActivity" />
-        <activity android:name=".WvChartActivity" />
+
+
         <activity android:name=".EcogChartActivity"></activity>
     </application>
 

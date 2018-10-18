@@ -246,7 +246,7 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
 
 
         //自定义适配器，适配于X轴
-        String[] xStrs = new String[]{ "","what", "噢", "冬","sha","k","p","l","s","end"}; // 线图横坐标文字
+        String[] xStrs = new String[]{ "","what", "噢", "冬","sha","k","cat","l","s","end"}; // 线图横坐标文字
         myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
 
         XAxis xAxis = lineChart.getXAxis();

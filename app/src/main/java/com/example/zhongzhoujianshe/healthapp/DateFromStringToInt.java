@@ -51,7 +51,7 @@ public class DateFromStringToInt {
         }
         return dateIds;
     }
-    public static ArrayList<Integer> getMinsDuration(ArrayList<String> dateUnion){
+    public ArrayList<Integer> getMinsDuration(ArrayList<String> dateUnion){
         ArrayList<Integer> dateIds = new ArrayList<>();
         Log.e("TAG", "getMinsDuration:" + dateUnion.size());
         if(dateUnion.size() != 0){

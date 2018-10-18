@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -118,7 +119,7 @@ public class WvChartActivity extends AppCompatActivity implements OnChartValueSe
         lineChart.isDrawMarkersEnabled();
         lineChart.setDrawMarkers(true);
 
-        Button lastweek =(Button)findViewById(R.id.btn4);
+        Button lastweek =(Button)findViewById(R.id.btn1);
         lastweek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,7 +142,7 @@ public class WvChartActivity extends AppCompatActivity implements OnChartValueSe
 
 
         // last month button
-        Button lastmonth  =(Button)findViewById(R.id.btn5);
+        Button lastmonth  =(Button)findViewById(R.id.btn2);
         lastmonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,7 +167,7 @@ public class WvChartActivity extends AppCompatActivity implements OnChartValueSe
 
 
         // last year button
-        Button lastyear  =(Button)findViewById(R.id.btn6);
+        Button lastyear  =(Button)findViewById(R.id.btn3);
         lastyear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,6 +274,56 @@ public class WvChartActivity extends AppCompatActivity implements OnChartValueSe
 
     private void iniView() {
         /* * * * * toolbar * * * * * */
+        // 第二行按钮
+        MyRoundCornerButton btn1 = (MyRoundCornerButton) findViewById(R.id.btn1);
+        MyRoundCornerButton btn2 = (MyRoundCornerButton) findViewById(R.id.btn2);
+        MyRoundCornerButton btn3 = (MyRoundCornerButton) findViewById(R.id.btn3);
+        //shape left to right: left corner, rectangle, right corner
+        btn1.setFillet(true);
+        btn1.setPartRadius(15, 0, 0, 15);
+        btn3.setFillet(true);
+        btn3.setPartRadius(0, 15, 15, 0);
+        //border
+        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
+        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
+        btn2.setBorderTop(true);
+        btn2.setBorderBottom(true);
+        btn2.setBorderWidth(5);
+        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopBtn1));
+        //background color
+        btn1.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
+        btn2.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
+        btn3.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
+        btn1.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        btn2.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        btn3.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        //text color
+        btn1.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
+        btn2.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
+        btn3.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
+        btn1.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        btn2.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        btn3.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        //text
+        btn1.setText(getResources().getString(R.string.chart_week));
+        btn2.setText(getResources().getString(R.string.chart_month));
+        btn3.setText(getResources().getString(R.string.chart_all));
+        //click
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "click btn1", Toast.LENGTH_LONG).show();
+            }
+        });
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "click btn2", Toast.LENGTH_LONG).show();
+            }
+        });
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "click btn3", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //used for setting icon-font
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");

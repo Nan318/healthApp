@@ -24,7 +24,12 @@
         <activity android:name=".QolChartActivity" />
 
         <activity android:name=".BssChartActivity" />
-        <activity android:name=".WvChartActivity" >
+
+
+    <activity android:name=".WvChartActivity" />
+
+
+        <activity android:name=".EcogChartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +38,6 @@
         </activity>
 
 
-        <activity android:name=".EcogChartActivity"></activity>
     </application>
 
 </manifest>

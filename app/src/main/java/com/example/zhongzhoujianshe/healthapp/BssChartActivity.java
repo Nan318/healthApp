@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.example.zhongzhoujianshe.healthapp.DateFromStringToInt.getMinsDuration;
 
 
 public class BssChartActivity extends AppCompatActivity {
@@ -43,14 +42,14 @@ public class BssChartActivity extends AppCompatActivity {
     private DatabaseReference userRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
     //data
-    private ArrayList<String> dateAll;
-    private ArrayList<String> dateWeek;
-    private ArrayList<String> dateMonth;
-    private ArrayList<Integer> dateIdAll;  //x, converted from dateAll
+    private ArrayList<String> dateAll = new ArrayList<>();
+    private ArrayList<String> dateWeek = new ArrayList<>();
+    private ArrayList<String> dateMonth = new ArrayList<>();
+    private int[] dateIdAll;  //x, converted from dateAll
+    private int[] dateIdMonth;  //x, converted from dateMonth
+    private int[] dateIdWeek; //x, converted from dateWeek
     private ArrayList<Integer> typeIdAll;   //y
-    private ArrayList<Integer> dateIdMonth;  //x, converted from dateMonth
     private ArrayList<Integer> typeIdMonth;  //y
-    private ArrayList<Integer> dateIdWeek; //x, converted from dateWeek
     private ArrayList<Integer> typeIdWeek; //y
 
     //variables
@@ -131,17 +130,17 @@ public class BssChartActivity extends AppCompatActivity {
 
                     //test date id & type id
                     //i.e. test values for x and y
-                    dateIdAll = getMinsDuration(dateAll);
-                    dateIdMonth = getMinsDuration(dateMonth);
-                    dateIdWeek = getMinsDuration(dateWeek);
-                    for(int i=0; i<dateIdAll.size();i++){
-                        Log.e("ALL", dateIdAll.get(i) +": " + typeIdAll.get(i));
+                    dateIdAll = getMinsDuration(dateAll, dateAll.size());
+                    dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
+                    dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
+                    for(int i=0; i<dateIdAll.length;i++){
+                        Log.e("ALL", dateIdAll[i] +": " + typeIdAll.get(i));
                     }
-                    for(int i=0; i<dateIdMonth.size();i++){
-                        Log.e("ALL", dateIdMonth.get(i) +": " + typeIdMonth.get(i));
+                    for(int i=0; i<dateIdMonth.length;i++){
+                        Log.e("MONTH", dateIdMonth[i] +": " + typeIdMonth.get(i));
                     }
-                    for(int i=0; i<dateIdWeek.size();i++){
-                        Log.e("ALL", dateIdWeek.get(i) +": " + typeIdWeek.get(i));
+                    for(int i=0; i<dateIdWeek.length;i++){
+                        Log.e("WEEK", dateIdWeek[i] +": " + typeIdWeek.get(i));
                     }
 
                 }else{
@@ -281,7 +280,7 @@ public class BssChartActivity extends AppCompatActivity {
                     dateAll.add(answerDate);
                     int type = bssA.getType();
                     typeIdAll.add(type);
-                   // Log.e("ALL ", answerDate +": "+type);
+                    // Log.e("ALL ", answerDate +": "+type);
                 }
             }
 
@@ -293,6 +292,39 @@ public class BssChartActivity extends AppCompatActivity {
         });
     }
 
+    public int[] getMinsDuration(ArrayList<String> dateUnion, int length){
+        int[] dateIds = new int[length];
+        Log.e("TAG", "getMinsDuration:" + dateUnion.isEmpty());
+        if(length != 0){
+            if (length == 1){
+                dateIds[0] = 1;
+            }else if (length > 1){
+                dateIds[0] = 1;
+                //calculate from the second date
+                for (int i = 1; i < length; i++){
+                    String time1 = dateUnion.get(i-1);
+                    String time2 = dateUnion.get(i);
+                    try{
+                        Date previousDate = timeFormat.parse(time1);
+                        Date currentDate = timeFormat.parse(time2);
+                        //Note that the different is in milliseconds,
+                        // it needs to be divided by 1000 to get the number of seconds.
+                        long difference = currentDate.getTime() - previousDate.getTime();
+                        long durationInSec = difference/1000;
+                        long durationInMinus = durationInSec/60;
+                        dateIds[i] = (int) durationInMinus;
+//                        dateIds.add(i, (int) durationInMinus);
 
+                    }catch (java.text.ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+
+        return dateIds;
+    }
 
 }

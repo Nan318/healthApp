@@ -20,7 +20,10 @@
     <color name="dialog_gray_press">#666566</color>
     <color name="bssDateBg">#406171</color>
     <color name="bssDateTxt">#e4a354</color>
+    <color name="bssDateTxtP">#b78d5a</color>
     <color name="bssRateBtn">#f29b5f</color>
+    <color name="bssChartOrange">#d8833b</color>
+    <color name="wvChartTopPink">#e0787c</color>
     <color name="wvDateBg">#e0787c</color>
     <color name="wvDateTxt">#437eb5</color>
     <color name="wvInputGreen">#65c979</color>
@@ -31,8 +34,10 @@
     <color name="colorRun">#9048ae</color>
     <color name="colorHeart">#dd5b61</color>
     <color name="colorDice">#18a88a</color>
-    <color name="qolChartTopBtn1">#925cb0</color>
-    <color name="qolChartTopBtn2">#102132</color>
+    <color name="qolChartTopPurple">#925cb0</color>
+    <color name="chartDarkBlue">#102132</color>
+    <color name="ecogChartTopBlue">#5296d6</color>
+
 
 </resources>
 

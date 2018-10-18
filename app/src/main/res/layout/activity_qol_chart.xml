@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/qolChartTopBtn2"
+            android:background="@color/chartDarkBlue"
             android:orientation="horizontal">
 
             <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton

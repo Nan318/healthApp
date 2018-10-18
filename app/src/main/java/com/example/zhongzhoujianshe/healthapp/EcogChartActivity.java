@@ -13,36 +13,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
-import android.content.Intent;
-import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.icu.text.DateIntervalFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -52,17 +31,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class EcogChartActivity extends AppCompatActivity implements OnChartValueSelectedListener  {
     //UI objects
@@ -495,26 +470,26 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         btn3.setFillet(true);
         btn3.setPartRadius(0, 15, 15, 0);
         //border
-        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
+        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
         btn2.setBorderTop(true);
         btn2.setBorderBottom(true);
         btn2.setBorderWidth(5);
-        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopBtn1));
+        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopPurple));
         //background color
-        btn1.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn2.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn3.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn1.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn2.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn1.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
+        btn2.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
         //text color
-        btn1.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn2.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn1.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn2.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn3.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        btn1.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn2.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn1.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
         //text
         btn1.setText(getResources().getString(R.string.chart_week));
         btn2.setText(getResources().getString(R.string.chart_month));

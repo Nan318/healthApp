@@ -15,24 +15,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import android.content.Context;
-import android.content.Intent;
+
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.icu.text.DateIntervalFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -42,25 +32,20 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class BssChartActivity extends AppCompatActivity implements OnChartValueSelectedListener  {
     //UI objects
@@ -92,16 +77,16 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     private ArrayList<Integer> typeIdAll;   //line: y
     private ArrayList<Integer> typeIdMonth;  //line: y
     private ArrayList<Integer> typeIdWeek; //line: y
-    private int[] barAll = new int[]{0,0,0,0,0,0,0};  //value of bar chart, i.e. count
-    private int[] barMonth = new int[]{0,0,0,0,0,0,0};
-    private int[] barWeek = new int[]{0,0,0,0,0,0,0};
+    private int[] barAll;  //value of bar chart, i.e. count
+    private int[] barMonth;
+    private int[] barWeek;
     //charts
-    private List<Entry> lineWeek = new ArrayList<>();
-    private List<Entry> lineMonth = new ArrayList<>();
-    private List<Entry> lineAll = new ArrayList<>();
-    private ArrayList<BarEntry> barWeekEntry = new ArrayList<BarEntry>();
-    private ArrayList<BarEntry> barMonthEntry = new ArrayList<BarEntry>();
-    private ArrayList<BarEntry> barAllEntry = new ArrayList<BarEntry>();
+    private List<Entry> lineWeek;
+    private List<Entry> lineMonth;
+    private List<Entry> lineAll;
+    private ArrayList<BarEntry> barWeekEntry;
+    private ArrayList<BarEntry> barMonthEntry;
+    private ArrayList<BarEntry> barAllEntry;
 
     //variables
     private String DateToday;
@@ -180,15 +165,15 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     mRoot = FirebaseDatabase.getInstance().getReference();
                     userRef = mRoot.child(currentUserId).child("bss");
 
-                    getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
-                    getDataLastMonth();
-                    getDataAll();
+                    //getDataLastMonth();
+                    //getDataAll();
 
                     //test date id & type id
                     //i.e. test values for x and y
-                    dateIdAll = getMinsDuration(dateAll, dateAll.size());
-                    dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
+                    //dateIdAll = getMinsDuration(dateAll, dateAll.size());
+                    //dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
 
+                    setBtn1Click();
 
 
                 }else{
@@ -197,124 +182,130 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
             }
         };
 
-
-
-        /* * * * * initial line data * * * * * */
-
-
-
-        //innitial line data
-
-        List<Entry> valsComp1 = new ArrayList<>();
-
-
-        valsComp1.add(new Entry(1, 2));
-        valsComp1.add(new Entry(2, 0));
-        valsComp1.add(new Entry(3, 0));
-        valsComp1.add(new Entry(6, 1));
-        valsComp1.add(new Entry(7, 2));
-        valsComp1.add(new Entry(8, 3));
-
-
-
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        yVals1.add(new BarEntry(1, 3));
-        yVals1.add(new BarEntry(2, 4));
-        yVals1.add(new BarEntry(3, 5));
-        yVals1.add(new BarEntry(4, 6));
-        yVals1.add(new BarEntry(5, 10));
-        yVals1.add(new BarEntry(6, 10));
-        yVals1.add(new BarEntry(7, 10));
-
-
-//connect
-        hBarChart = findViewById(R.id.hBarChart);
-        lineChart = findViewById(R.id.lineChart);
-
-
-        initHBarChart(yVals1);  //统计完以后插入纵坐标就好
-        initLineChart(valsComp1);
-        lineChart.isDrawMarkersEnabled();
-        lineChart.setDrawMarkers(true);
-
-
         //click
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                //lineChart = findViewById(R.id.lineChart);
 
-                getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
-                if (!dateWeek.isEmpty()){
-                    //bar value
+                setBtn1Click();
 
-
-                    dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
-                    for(int j = 0; j < dateIdWeek.length; j++){
-                        lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
-                    }
-                    for (int k = 0; k < barWeek.length; k++){
-                        barWeekEntry.add(new BarEntry(k + 1, 0));
-                    }
-
-                    initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
-                    initLineChart(lineWeek);
-                    lineChart.isDrawMarkersEnabled();
-                    lineChart.setDrawMarkers(true);
-                }else {
-
-                }
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
-                int[] lastweekX = {1,2,3};
-                int[] lastweekY = {2,4,5};
+                btn2.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
+                btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
+                btn2.setBackColor(getResources().getColor(R.color.bssChartOrange));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-                List<Entry> valsComp2 = new ArrayList<>();
-                for(int i =0; i<lastweekX.length;i++){
-                    valsComp2.add(new Entry(lastweekX[i], lastweekY[i]));
+                getDataLastMonth(); //get data for : dateWeek & typeIdWeek & barWeek
+                if (!dateMonth.isEmpty()){
+                    lineMonth = new ArrayList<>();
+                    barMonthEntry = new ArrayList<>();
+                    barMonth = new int[]{0,0,0,0,0,0,0};
+                    //dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
+                    dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
+
+                    for(int j = 0; j < dateIdMonth.length; j++){
+                        lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j)));
+                        for(int k = 0; k < barMonth.length; k++){
+                            if(typeIdMonth.get(j) == k + 1){
+                                barMonth[k] = barMonth[k] + 1;
+                            }
+                        }
+                    }
+
+                    for (int k = 0; k < barMonth.length; k++){
+                        barMonthEntry.add(new BarEntry(k + 1, barMonth[k]));
+                    }
+
+                    initHBarChart(barMonthEntry);  //统计完以后插入纵坐标就好
+                    initLineChart(lineMonth);
+                    lineChart.isDrawMarkersEnabled();
+                    lineChart.setDrawMarkers(true);
+                }else {
+                    setNoDataView();
                 }
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
+                btn3.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
+                btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
+                btn3.setBackColor(getResources().getColor(R.color.bssChartOrange));
+                btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-                List<Entry> valsComp2 = new ArrayList<>();
+                getDataAll(); //get data for : dateWeek & typeIdWeek & barWeek
+                if (!dateAll.isEmpty()){
+                    lineAll = new ArrayList<>();
+                    barAllEntry = new ArrayList<>();
+                    barAll = new int[]{0,0,0,0,0,0,0};
+                    //dateIdAll = getMinsDuration(dateAll, dateAll.size());
+                    dateIdAll = getDurationEqual(dateAll, dateAll.size());
+                    for(int j = 0; j < dateIdAll.length; j++){
+                        lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j)));
+                        for(int k = 0; k < barAll.length; k++){
+                            if(typeIdAll.get(j) == k + 1){
+                                barAll[k] = barAll[k] + 1;
+                            }
+                        }
+                    }
 
+                    for (int k = 0; k < barAll.length; k++){
+                        barAllEntry.add(new BarEntry(k + 1, barAll[k]));
+                    }
 
-                valsComp2.add(new Entry(1, 2));
-                valsComp2.add(new Entry(2, 0));
-                valsComp2.add(new Entry(3, 0));
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
+                    initHBarChart(barAllEntry);  //统计完以后插入纵坐标就好
+                    initLineChart(lineAll);
+                    lineChart.isDrawMarkersEnabled();
+                    lineChart.setDrawMarkers(true);
+                }else {
+                    setNoDataView();
+                }
             }
         });
 
+    }
+
+    public void setBtn1Click(){
+        btn1.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
+        btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
+        btn1.setBackColor(getResources().getColor(R.color.bssChartOrange));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+
+        //lineChart = findViewById(R.id.lineChart);
+        getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+        if (!dateWeek.isEmpty()){
+            lineWeek = new ArrayList<>();
+            barWeekEntry = new ArrayList<>();
+            barWeek = new int[]{0,0,0,0,0,0,0};
+            //dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
+            dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
+            for(int j = 0; j < dateIdWeek.length; j++){
+                lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
+                for(int k = 0; k < barWeek.length; k++){
+                    if(typeIdWeek.get(j) == k + 1){
+                        barWeek[k] = barWeek[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 0; k < barWeek.length; k++){
+                barWeekEntry.add(new BarEntry(k + 1, barWeek[k]));
+            }
+
+            initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
+            initLineChart(lineWeek);
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -346,6 +337,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
 
         xAxis.setGranularity(1f);
         xAxis.setAxisMinimum(1f);
@@ -556,26 +549,26 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         btn3.setFillet(true);
         btn3.setPartRadius(0, 15, 15, 0);
         //border
-        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
+        btn1.setStroke(3, getResources().getColor(R.color.bssChartOrange));
+        btn3.setStroke(3, getResources().getColor(R.color.bssChartOrange));
         btn2.setBorderTop(true);
         btn2.setBorderBottom(true);
         btn2.setBorderWidth(5);
-        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopBtn1));
+        btn2.setBorderColor(getResources().getColor(R.color.bssChartOrange));
         //background color
-        btn1.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn2.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn3.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn1.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn2.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn1.setBackColorSelected(getResources().getColor(R.color.bssDateTxtP));
+        btn2.setBackColorSelected(getResources().getColor(R.color.bssDateTxtP));
+        btn3.setBackColorSelected(getResources().getColor(R.color.bssDateTxtP));
         //text color
-        btn1.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn2.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn3.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn1.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn2.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn3.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
+        btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
+        btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
+        //btn1.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        //btn2.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        //btn3.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
         //text
         btn1.setText(getResources().getString(R.string.chart_week));
         btn2.setText(getResources().getString(R.string.chart_month));
@@ -602,6 +595,14 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     }
 
     //get data: last week
+
+    public void setNoDataView(){
+        lineChart.setNoDataText("No chart data available");
+        lineChart.setNoDataTextColor(getResources().getColor(R.color.white));
+        hBarChart.setNoDataText("");
+        textView.setText("");
+        textView2.setText("");
+    }
 
     private void getDataLastWeek() {
         // Get a reference to our record
@@ -666,8 +667,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     dateMonth.add(answerDate);
                     int type = bssA.getType();
                     typeIdMonth.add(type);
-                    //bar data
-                    barWeek[type-1] = barWeek[type-1]+1;
+
                     //Log.e("MONTH ", answerDate +": "+type);
                 }
             }
@@ -683,7 +683,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     private void getDataAll() {
         // Get a reference to our record
         // Attach an listener to read the data at our posts reference
-        userRef.addValueEventListener(new ValueEventListener() {
+        Query filter = userRef.orderByChild("time");
+        filter.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 dateAll = new ArrayList<>();
@@ -696,9 +697,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     dateAll.add(answerDate);
                     int type = bssA.getType();
                     typeIdAll.add(type);
-                    //bar data
-                    barWeek[type-1] = barWeek[type-1]+1;
-                    // Log.e("ALL ", answerDate +": "+type);
+                    Log.e("ALL ", answerDate +": "+type);
                 }
             }
 
@@ -713,9 +712,11 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     public int[] getMinsDuration(ArrayList<String> dateUnion, int length){
         int[] dateIds = new int[length];
         Log.e("TAG", "getMinsDuration:" + dateUnion.isEmpty());
+
+
         if(length != 0){
             if (length == 1){
-                dateIds[0] = 0;
+                dateIds[0] = 1;
             }else if (length > 1){
                 dateIds[0] = 0;
                 //calculate from the second date
@@ -729,8 +730,9 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                         // it needs to be divided by 1000 to get the number of seconds.
                         long difference = currentDate.getTime() - previousDate.getTime();
                         long durationInSec = difference/1000;
-                        long durationInMinus = durationInSec/60;
+                        long durationInMinus = durationInSec/86400;  //should divide 60, but is too big
                         dateIds[i] = (int) durationInMinus;
+                        Log.e("GET", "getMinsDuration:" + dateIds[i]);
 //                        dateIds.add(i, (int) durationInMinus);
 
                     }catch (java.text.ParseException e) {
@@ -744,6 +746,27 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
         return dateIds;
     }
+
+    public int[] getDurationEqual(ArrayList<String> dateUnion, int length){
+        int[] dateIds = new int[length];
+
+        if(length != 0){
+            Log.e("TAG", "getEqualDuration:" + dateUnion.isEmpty());
+            if (length == 1){
+                dateIds[0] = 1;
+            }else if (length > 1){
+                //calculate from the second date
+                for (int i = 0; i < length; i++){
+                    dateIds[i] = i;
+
+                }
+            }
+        }
+
+        return dateIds;
+    }
+
+
 
 
 }

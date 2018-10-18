@@ -510,26 +510,26 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
         btn6.setFillet(true);
         btn6.setPartRadius(0, 15, 15, 0);
         //border
-        btn4.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
-        btn6.setStroke(3, getResources().getColor(R.color.qolChartTopBtn1));
+        btn4.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
+        btn6.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
         btn5.setBorderTop(true);
         btn5.setBorderBottom(true);
         btn5.setBorderWidth(5);
-        btn5.setBorderColor(getResources().getColor(R.color.qolChartTopBtn1));
+        btn5.setBorderColor(getResources().getColor(R.color.qolChartTopPurple));
         //background color
-        btn4.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn5.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn6.setBackColor(getResources().getColor(R.color.qolChartTopBtn2));
-        btn4.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn5.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
-        btn6.setBackColorSelected(getResources().getColor(R.color.qolChartTopBtn1));
+        btn4.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn5.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn6.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn4.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
+        btn5.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
+        btn6.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
         //text color
-        btn4.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn5.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn6.setTextColori(getResources().getColor(R.color.qolChartTopBtn1));
-        btn4.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn5.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
-        btn6.setTextColorSelected(getResources().getColor(R.color.qolChartTopBtn2));
+        btn4.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn5.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn6.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn4.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        btn5.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        btn6.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
         //text
         btn4.setText(getResources().getString(R.string.chart_week));
         btn5.setText(getResources().getString(R.string.chart_month));

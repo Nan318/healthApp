@@ -121,7 +121,7 @@ public class BssSurveyActivity extends AppCompatActivity{
 
     }
     private void sendData(){
-        String date = "2018-10-18-11-35";
+        String date = "2018-04-18-21-35";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象

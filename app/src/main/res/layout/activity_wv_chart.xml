@@ -88,7 +88,7 @@
             android:layout_margin="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:background="@color/qolChartTopBtn2"
+            android:background="@color/chartDarkBlue"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

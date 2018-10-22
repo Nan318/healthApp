@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -113,8 +114,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bss_chart);
 
@@ -165,17 +164,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     mRoot = FirebaseDatabase.getInstance().getReference();
                     userRef = mRoot.child(currentUserId).child("bss");
 
-                    //getDataLastMonth();
-                    //getDataAll();
-
-                    //test date id & type id
-                    //i.e. test values for x and y
-                    //dateIdAll = getMinsDuration(dateAll, dateAll.size());
-                    //dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
-
-                    setBtn1Click();
-
-
+                    setBtn1Click();    //default display: last week
                 }else{
                     Log.e("TAG", "onAuthStateChanged:signed_out");
                 }
@@ -185,9 +174,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         //click
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-
-                setBtn1Click();
-
+                setBtn1Click();   //same as default
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -204,8 +191,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     lineMonth = new ArrayList<>();
                     barMonthEntry = new ArrayList<>();
                     barMonth = new int[]{0,0,0,0,0,0,0};
-                    //dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
-                    dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
+                    dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
+                    //dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
 
                     for(int j = 0; j < dateIdMonth.length; j++){
                         lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j)));
@@ -243,8 +230,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     lineAll = new ArrayList<>();
                     barAllEntry = new ArrayList<>();
                     barAll = new int[]{0,0,0,0,0,0,0};
-                    //dateIdAll = getMinsDuration(dateAll, dateAll.size());
-                    dateIdAll = getDurationEqual(dateAll, dateAll.size());
+                    dateIdAll = getMinsDuration(dateAll, dateAll.size());
+                    //dateIdAll = getDurationEqual(dateAll, dateAll.size());
                     for(int j = 0; j < dateIdAll.length; j++){
                         lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j)));
                         for(int k = 0; k < barAll.length; k++){
@@ -284,8 +271,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
             lineWeek = new ArrayList<>();
             barWeekEntry = new ArrayList<>();
             barWeek = new int[]{0,0,0,0,0,0,0};
-            //dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
-            dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
+            dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
+            //dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
             for(int j = 0; j < dateIdWeek.length; j++){
                 lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
                 for(int k = 0; k < barWeek.length; k++){
@@ -309,8 +296,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-
-
 
     /**
      * initialize the attributes of the line chart
@@ -539,7 +524,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
         /* * * * * body * * * * * */
 
-        // 第二行按钮
         btn1 = (MyRoundCornerButton) findViewById(R.id.btn1);
         btn2 = (MyRoundCornerButton) findViewById(R.id.btn2);
         btn3 = (MyRoundCornerButton) findViewById(R.id.btn3);
@@ -594,8 +578,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
     }
 
-    //get data: last week
 
+    //set view shows when no data available
     public void setNoDataView(){
         lineChart.setNoDataText("No chart data available");
         lineChart.setNoDataTextColor(getResources().getColor(R.color.white));
@@ -604,6 +588,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         textView2.setText("");
     }
 
+    //get data: last week
     private void getDataLastWeek() {
         // Get a reference to our record
 
@@ -711,8 +696,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
     public int[] getMinsDuration(ArrayList<String> dateUnion, int length){
         int[] dateIds = new int[length];
-        Log.e("TAG", "getMinsDuration:" + dateUnion.isEmpty());
-
+        Log.e("EMPTY", "getMinsDuration:" + dateUnion.isEmpty());
 
         if(length != 0){
             if (length == 1){
@@ -721,7 +705,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                 dateIds[0] = 0;
                 //calculate from the second date
                 for (int i = 1; i < length; i++){
-                    String time1 = dateUnion.get(i-1);
+                    String time1 = dateUnion.get(0);
                     String time2 = dateUnion.get(i);
                     try{
                         Date previousDate = timeFormat.parse(time1);
@@ -730,9 +714,12 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                         // it needs to be divided by 1000 to get the number of seconds.
                         long difference = currentDate.getTime() - previousDate.getTime();
                         long durationInSec = difference/1000;
-                        long durationInMinus = durationInSec/86400;  //should divide 60, but is too big
+                        long durationInMinus = durationInSec/60;  //should divide 60, but is too big
                         dateIds[i] = (int) durationInMinus;
+                        //Toast.makeText(getApplicationContext() , dateIds[i] , Toast.LENGTH_SHORT).show();
                         Log.e("GET", "getMinsDuration:" + dateIds[i]);
+
+
 //                        dateIds.add(i, (int) durationInMinus);
 
                     }catch (java.text.ParseException e) {
@@ -747,24 +734,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         return dateIds;
     }
 
-    public int[] getDurationEqual(ArrayList<String> dateUnion, int length){
-        int[] dateIds = new int[length];
 
-        if(length != 0){
-            Log.e("TAG", "getEqualDuration:" + dateUnion.isEmpty());
-            if (length == 1){
-                dateIds[0] = 1;
-            }else if (length > 1){
-                //calculate from the second date
-                for (int i = 0; i < length; i++){
-                    dateIds[i] = i;
-
-                }
-            }
-        }
-
-        return dateIds;
-    }
 
 
 

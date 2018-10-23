@@ -16,28 +16,34 @@
 
         </activity>
         <activity android:name=".BssSurveyActivity" />
-        <activity android:name=".MainMenu" />
-        <activity android:name=".TestMyButton" />
-        <activity android:name=".WvSurveyActivity" />
-        <activity android:name=".EcogSurveyActivity" />
-        <activity android:name=".LoginActivity">
-
-        </activity>
-        <activity android:name=".QolChartActivity" />
-
-        <activity android:name=".BssChartActivity">
+        <activity android:name=".MainMenu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TestMyButton" />
+        <activity android:name=".WvSurveyActivity" />
+        <activity android:name=".EcogSurveyActivity" >
+
+        </activity>
+        <activity android:name=".LoginActivity">
+
+        </activity>
+        <activity android:name=".QolChartActivity" />
+
+        <activity android:name=".BssChartActivity">
+
+        </activity>
         <activity android:name=".WvChartActivity" >
 
         </activity>
 
 
-        <activity android:name=".EcogChartActivity"></activity>
+        <activity android:name=".EcogChartActivity">
+
+        </activity>
     </application>
 
 </manifest>

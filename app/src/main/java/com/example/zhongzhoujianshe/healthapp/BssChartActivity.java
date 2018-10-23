@@ -1,5 +1,7 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,7 +35,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -164,7 +166,9 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     mRoot = FirebaseDatabase.getInstance().getReference();
                     userRef = mRoot.child(currentUserId).child("bss");
 
-                    setBtn1Click();    //default display: last week
+                    getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                    // getChartData();
+                    setBtn1Click();   //same as default
                 }else{
                     Log.e("TAG", "onAuthStateChanged:signed_out");
                 }
@@ -174,11 +178,15 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         //click
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+                getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                // getChartData();
                 setBtn1Click();   //same as default
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+                getDataLastMonth(); //get data for : dateWeek & typeIdWeek & barWeek
+
                 btn2.setTextColori(getResources().getColor(R.color.chartDarkBlue));
                 btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
                 btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
@@ -186,38 +194,14 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                 btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
                 btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-                getDataLastMonth(); //get data for : dateWeek & typeIdWeek & barWeek
-                if (!dateMonth.isEmpty()){
-                    lineMonth = new ArrayList<>();
-                    barMonthEntry = new ArrayList<>();
-                    barMonth = new int[]{0,0,0,0,0,0,0};
-                    dateIdMonth = getMinsDuration(dateMonth, dateMonth.size());
-                    //dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
 
-                    for(int j = 0; j < dateIdMonth.length; j++){
-                        lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j)));
-                        for(int k = 0; k < barMonth.length; k++){
-                            if(typeIdMonth.get(j) == k + 1){
-                                barMonth[k] = barMonth[k] + 1;
-                            }
-                        }
-                    }
 
-                    for (int k = 0; k < barMonth.length; k++){
-                        barMonthEntry.add(new BarEntry(k + 1, barMonth[k]));
-                    }
-
-                    initHBarChart(barMonthEntry);  //统计完以后插入纵坐标就好
-                    initLineChart(lineMonth);
-                    lineChart.isDrawMarkersEnabled();
-                    lineChart.setDrawMarkers(true);
-                }else {
-                    setNoDataView();
-                }
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+                getDataAll(); //get data for : dateWeek & typeIdWeek & barWeek
+
                 btn3.setTextColori(getResources().getColor(R.color.chartDarkBlue));
                 btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
                 btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
@@ -225,39 +209,17 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                 btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
                 btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-                getDataAll(); //get data for : dateWeek & typeIdWeek & barWeek
-                if (!dateAll.isEmpty()){
-                    lineAll = new ArrayList<>();
-                    barAllEntry = new ArrayList<>();
-                    barAll = new int[]{0,0,0,0,0,0,0};
-                    dateIdAll = getMinsDuration(dateAll, dateAll.size());
-                    //dateIdAll = getDurationEqual(dateAll, dateAll.size());
-                    for(int j = 0; j < dateIdAll.length; j++){
-                        lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j)));
-                        for(int k = 0; k < barAll.length; k++){
-                            if(typeIdAll.get(j) == k + 1){
-                                barAll[k] = barAll[k] + 1;
-                            }
-                        }
-                    }
 
-                    for (int k = 0; k < barAll.length; k++){
-                        barAllEntry.add(new BarEntry(k + 1, barAll[k]));
-                    }
 
-                    initHBarChart(barAllEntry);  //统计完以后插入纵坐标就好
-                    initLineChart(lineAll);
-                    lineChart.isDrawMarkersEnabled();
-                    lineChart.setDrawMarkers(true);
-                }else {
-                    setNoDataView();
-                }
             }
         });
 
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     public void setBtn1Click(){
+        //lineChart = findViewById(R.id.lineChart);
+        getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
         btn1.setTextColori(getResources().getColor(R.color.chartDarkBlue));
         btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
         btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
@@ -265,34 +227,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
         btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-        //lineChart = findViewById(R.id.lineChart);
-        getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
-        if (!dateWeek.isEmpty()){
-            lineWeek = new ArrayList<>();
-            barWeekEntry = new ArrayList<>();
-            barWeek = new int[]{0,0,0,0,0,0,0};
-            dateIdWeek = getMinsDuration(dateWeek, dateWeek.size());
-            //dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
-            for(int j = 0; j < dateIdWeek.length; j++){
-                lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
-                for(int k = 0; k < barWeek.length; k++){
-                    if(typeIdWeek.get(j) == k + 1){
-                        barWeek[k] = barWeek[k] + 1;
-                    }
-                }
-            }
-
-            for (int k = 0; k < barWeek.length; k++){
-                barWeekEntry.add(new BarEntry(k + 1, barWeek[k]));
-            }
-
-            initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
-            initLineChart(lineWeek);
-            lineChart.isDrawMarkersEnabled();
-            lineChart.setDrawMarkers(true);
-        }else {
-            setNoDataView();
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -300,7 +234,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     /**
      * initialize the attributes of the line chart
      */
-    private void initLineChart(List<Entry> lineData) {
+    private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener(this);
         // 设置是否可以缩放图表
@@ -317,17 +251,29 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
 
         //自定义适配器，适配于X轴
-        String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
-        myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
+        //String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
+        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+        if (lineData.size() > 0) {
+            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    if ((int) value >= lineData.size()) {
+                        return "";
+                    } else {
+                        return lineData.get((int) value).getData() + "";
+                    }
+                }
+            });
+        }
 
 
         xAxis.setGranularity(1f);
         xAxis.setAxisMinimum(1f);
-        xAxis.setValueFormatter(aoz);
+       // xAxis.setValueFormatter(aoz);
         xAxis.setDrawGridLines(false);
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setTextColor(Color.WHITE);
@@ -483,6 +429,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
+            data.setValueTextColor(Color.WHITE);
             data.setBarWidth(0.9f);
             data.setValueTextSize(10f);
             set1.setColors(fourColor);
@@ -562,8 +509,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         hBarChart = findViewById(R.id.hBarChart);
         lineChart = findViewById(R.id.lineChart);
 
-        textView2 = findViewById(R.id.textView2);
-        textView = findViewById(R.id.textView);
+        textView2 = findViewById(R.id.overview);
+        textView = findViewById(R.id.textView13);
 
 
     }
@@ -610,6 +557,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                         //bar data
                         //barWeek[type-1] = barWeek[type-1]+1;
                         //Log.e("WEEK ", answerDate +": "+type);
+
+                        getWeekChartData();
                     }
                 }else{
                     /*
@@ -634,6 +583,37 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
 
     }
+    private void getWeekChartData(){
+        if (!dateWeek.isEmpty()){
+            lineWeek = new ArrayList<>();
+            barWeekEntry = new ArrayList<>();
+            barWeek = new int[]{0,0,0,0,0,0,0};
+            dateIdWeek = TimeMethods.getDayDuration(dateWeek, dateWeek.size());
+            //dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
+            for(int j = 0; j < dateIdWeek.length; j++){
+                String[] label = TimeMethods.getXAxisText(dateWeek, dateWeek.size(), false);
+                lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j),label[j]));
+                for(int k = 0; k < barWeek.length; k++){
+                    if(typeIdWeek.get(j) == k + 1){
+                        barWeek[k] = barWeek[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 0; k < barWeek.length; k++){
+                barWeekEntry.add(new BarEntry(k + 1, barWeek[k]));
+            }
+
+            initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineWeek);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
+    }
     //get data: last month
     private void getDataLastMonth() {
         // Get a reference to our record
@@ -654,6 +634,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     typeIdMonth.add(type);
 
                     //Log.e("MONTH ", answerDate +": "+type);
+
+                    getMonthChartData();
                 }
             }
 
@@ -663,6 +645,39 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
             }
 
         });
+    }
+
+    private void getMonthChartData(){
+        if (!dateMonth.isEmpty()){
+            lineMonth = new ArrayList<>();
+            barMonthEntry = new ArrayList<>();
+            barMonth = new int[]{0,0,0,0,0,0,0};
+            dateIdMonth = TimeMethods.getDayDuration(dateMonth, dateMonth.size());
+            //dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
+
+            for(int j = 0; j < dateIdMonth.length; j++){
+                String[] label = TimeMethods.getXAxisText(dateMonth, dateMonth.size(), false);
+                lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j),label[j]));
+                for(int k = 0; k < barMonth.length; k++){
+                    if(typeIdMonth.get(j) == k + 1){
+                        barMonth[k] = barMonth[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 0; k < barMonth.length; k++){
+                barMonthEntry.add(new BarEntry(k + 1, barMonth[k]));
+            }
+
+            initHBarChart(barMonthEntry);  //统计完以后插入纵坐标就好
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineMonth);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
     }
     //get data: all
     private void getDataAll() {
@@ -683,6 +698,8 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                     int type = bssA.getType();
                     typeIdAll.add(type);
                     Log.e("ALL ", answerDate +": "+type);
+
+                    getAllChartData();
                 }
             }
 
@@ -693,46 +710,40 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
         });
     }
-
-    public int[] getMinsDuration(ArrayList<String> dateUnion, int length){
-        int[] dateIds = new int[length];
-        Log.e("EMPTY", "getMinsDuration:" + dateUnion.isEmpty());
-
-        if(length != 0){
-            if (length == 1){
-                dateIds[0] = 1;
-            }else if (length > 1){
-                dateIds[0] = 0;
-                //calculate from the second date
-                for (int i = 1; i < length; i++){
-                    String time1 = dateUnion.get(0);
-                    String time2 = dateUnion.get(i);
-                    try{
-                        Date previousDate = timeFormat.parse(time1);
-                        Date currentDate = timeFormat.parse(time2);
-                        //Note that the different is in milliseconds,
-                        // it needs to be divided by 1000 to get the number of seconds.
-                        long difference = currentDate.getTime() - previousDate.getTime();
-                        long durationInSec = difference/1000;
-                        long durationInMinus = durationInSec/60;  //should divide 60, but is too big
-                        dateIds[i] = (int) durationInMinus;
-                        //Toast.makeText(getApplicationContext() , dateIds[i] , Toast.LENGTH_SHORT).show();
-                        Log.e("GET", "getMinsDuration:" + dateIds[i]);
-
-
-//                        dateIds.add(i, (int) durationInMinus);
-
-                    }catch (java.text.ParseException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+    @SuppressLint("NewApi")
+    private void getAllChartData(){
+        if (!dateAll.isEmpty()){
+            lineAll = new ArrayList<>();
+            barAllEntry = new ArrayList<>();
+            barAll = new int[]{0,0,0,0,0,0,0};
+            dateIdAll = TimeMethods.getDayDuration(dateAll, dateAll.size());
+            //dateIdAll = getDurationEqual(dateAll, dateAll.size());
+            for(int j = 0; j < dateIdAll.length; j++){
+                String[] label = TimeMethods.getXAxisText(dateAll, dateAll.size(), false);
+                lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j),label[j]));
+                for(int k = 0; k < barAll.length; k++){
+                    if(typeIdAll.get(j) == k + 1){
+                        barAll[k] = barAll[k] + 1;
                     }
-
                 }
             }
-        }
 
-        return dateIds;
+            for (int k = 0; k < barAll.length; k++){
+                barAllEntry.add(new BarEntry(k + 1, barAll[k]));
+            }
+
+            initHBarChart(barAllEntry);  //统计完以后插入纵坐标就好
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineAll);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
     }
+
+
 
 
 

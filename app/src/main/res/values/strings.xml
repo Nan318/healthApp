@@ -14,6 +14,8 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="warning">Warning</string>
+    <string name="overview">OVERVIEW</string>
+
     <string name="warning_txt">Questionnaire is not finished.</string>
     <string name="incomplete">Incomplete</string>
     <string name="incomplete_txt">All fields are mandatory.</string>

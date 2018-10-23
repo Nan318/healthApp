@@ -57,6 +57,7 @@ public class WvSurveyActivity extends AppCompatActivity{
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private WvAnswerModel wvAnswer;
 
     @Override
     public void onStart() {
@@ -205,7 +206,7 @@ public class WvSurveyActivity extends AppCompatActivity{
 
     private void sendData(){
         //date = qolResult.getDate();
-        time = "2018-10-10-13-23";
+        time = "2018-10-17-19-23";
         weight = et_weight.getEtText();
         height = et_height.getEtText();
         bmi_s = et_bmi.getEtText();
@@ -214,6 +215,8 @@ public class WvSurveyActivity extends AppCompatActivity{
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("wv");
+        wvAnswer = new WvAnswerModel(time, weight, height, bmi_s);
+
 
         Query checkUnique = userRef.orderByChild("time").equalTo(time);
         checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -222,19 +225,12 @@ public class WvSurveyActivity extends AppCompatActivity{
                 if (dataSnapshot.exists()) { //update existing data
                     DataSnapshot nodeDataSnapshot = dataSnapshot.getChildren().iterator().next();
                     String key = nodeDataSnapshot.getKey(); // this key is the eid of the existing data
-                    userRef.child(key).child("weight").setValue(weight);
-                    userRef.child(key).child("height").setValue(height);
-                    userRef.child(key).child("BMI").setValue(bmi_s);
-                    Log.e("Update","wv: " + time);
+                    userRef.child(key).setValue(wvAnswer);
+                    //Log.e("Update","wv: " + time);
                     Toast.makeText(getApplicationContext() , "Updated ~" , Toast.LENGTH_SHORT).show();
                 } else { //add new data
-                    Map<String, String> wv = new HashMap<String, String>();
-                    wv.put("time", time);
-                    wv.put("weight", weight);
-                    wv.put("height", height);
-                    wv.put("BMI", bmi_s);
-                    userRef.push().setValue(wv);
-                    Log.e("Add","wv: " + time);
+                    userRef.push().setValue(wvAnswer);
+                    //Log.e("Add","wv: " + time);
                     Toast.makeText(getApplicationContext() , "Added ~" , Toast.LENGTH_SHORT).show();
                 }
             }

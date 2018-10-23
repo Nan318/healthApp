@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView login_icon = (TextView) findViewById(R.id.login_icon);
         login_icon.setTypeface(font);
         et_appid = (EditText) findViewById(R.id.et_appid);
+
         //Get Firebase auth instance
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();

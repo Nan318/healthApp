@@ -1,23 +1,26 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.components.AxisBase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,6 +38,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +51,47 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_new;
-
+    private MyRoundCornerButton btn1;
+    private MyRoundCornerButton btn2;
+    private MyRoundCornerButton btn3;
     private HorizontalBarChart hBarChart;
     private LineChart lineChart;
+    private TextView txt_date_range;
+    private TextView txt_overview;
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    //data
+    private ArrayList<String> dateAll = new ArrayList<>();
+    private ArrayList<String> dateWeek = new ArrayList<>();
+    private ArrayList<String> dateMonth = new ArrayList<>();
+    private int[] dateIdAll;  //line: x, converted from dateAll
+    private int[] dateIdMonth;  //line: x, converted from dateMonth
+    private int[] dateIdWeek; //line: x, converted from dateWeek
+    private ArrayList<Integer> typeIdAll;   //line: y
+    private ArrayList<Integer> typeIdMonth;  //line: y
+    private ArrayList<Integer> typeIdWeek; //line: y
+    private int[] barAll;  //value of bar chart, i.e. count
+    private int[] barMonth;
+    private int[] barWeek;
+    //charts
+    private List<Entry> lineWeek;
+    private List<Entry> lineMonth;
+    private List<Entry> lineAll;
+    private ArrayList<BarEntry> barWeekEntry;
+    private ArrayList<BarEntry> barMonthEntry;
+    private ArrayList<BarEntry> barAllEntry;
+
+    //variables
+    private String DateToday;
+    private String DateLastWeekMon;
+    private String DateLastWeekSun;
+    private String DateLastMonthFirst;
+    private String DateLastMonthLast;
 
     @Override
     public void onStart() {
@@ -70,10 +109,33 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ecog_chart);
+
+
+
+        /* * * * * initialize view  * * * * * */
+        iniView();
+
+        /* * * * * get date of today, last month and last week * * * * * */
+
+        //get today's date
+        //DateToday = TimeMethods.getDateToday();
+        //Log.e("today","----"+DateToday);
+
+        //get last week (date range)
+        //Date date = new Date();
+        String[] lastweek = TimeMethods.getDateLastWeek();
+        DateLastWeekMon = lastweek[0];
+        DateLastWeekSun = lastweek[1];
+
+        //get last month
+        String[] lastmonth = TimeMethods.getDateLastMonth();
+        DateLastMonthLast = lastmonth[1];
+        DateLastMonthFirst = lastmonth[0];
+
+
+
         /* * * * * firebase * * * * * */
         //get Uid
         mAuth = FirebaseAuth.getInstance();
@@ -84,170 +146,81 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
                 if (user != null) {
                     // User is signed in
                     currentUserId = user.getUid();
+                    Log.e("TAG", "onAuthStateChanged:signed_in:" + currentUserId);
+                    mRoot = FirebaseDatabase.getInstance().getReference();
+                    userRef = mRoot.child(currentUserId).child("ecog");
+
+                    getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                    // getChartData();
+                    setBtn1Click();   //same as default
+                }else {
+                    Log.e("TAG", "onAuthStateChanged:signed_out");
                 }
             }
         };
 
-        /* * * * * initialize view  * * * * * */
-        iniView();
+        //click
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                setBtn1Click();   //same as default
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataLastMonth(); //get data for : dateWeek & typeIdWeek & barWeek
 
 
-        //innitial line data
-
-        List<Entry> valsComp1 = new ArrayList<>();
-
-
-        valsComp1.add(new Entry(1, 2));
-        valsComp1.add(new Entry(2, 0));
-        valsComp1.add(new Entry(3, 0));
-        valsComp1.add(new Entry(6, 1));
-        valsComp1.add(new Entry(7, 2));
-        valsComp1.add(new Entry(8, 3));
-
-
-
-// 存柱状图的y数据
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        yVals1.add(new BarEntry(1, 3));
-        yVals1.add(new BarEntry(2, 4));
-        yVals1.add(new BarEntry(3, 5));
-        yVals1.add(new BarEntry(4, 6));
-        yVals1.add(new BarEntry(5, 10));
-
-
-//connect
-        hBarChart = findViewById(R.id.hBarChart);
-        lineChart = findViewById(R.id.lineChart);
-
-
-        initHBarChart(yVals1);  //统计完以后插入纵坐标就好
-        initLineChart(valsComp1);
-        lineChart.isDrawMarkersEnabled();
-        lineChart.setDrawMarkers(true);
-
-
-
-
-
-        // last week button
-        Button lastweek =(Button)findViewById(R.id.btn1);
-        lastweek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                lineChart = findViewById(R.id.lineChart);
-
-                List<Entry> valsComp2 = new ArrayList<>();
-
-
-                valsComp2.add(new Entry(1, 2));
-                valsComp2.add(new Entry(2, 0));
-                valsComp2.add(new Entry(3, 0));
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-
-
-
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
-
+                btn2.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+                btn3.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+                btn2.setBackColor(getResources().getColor(R.color.ecogChartTopBlue));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
             }
         });
 
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataAll(); //get data for : dateWeek & typeIdWeek & barWeek
+                btn3.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn2.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+                btn1.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+                btn3.setBackColor(getResources().getColor(R.color.ecogChartTopBlue));
+                btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
-
-        // last month button
-        Button lastmonth  =(Button)findViewById(R.id.btn2);
-        lastmonth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
-                int[] lastweekX = {1,2,3};
-                int[] lastweekY = {2,4,5};
-
-                List<Entry> valsComp2 = new ArrayList<>();
-                for(int i =0; i<lastweekX.length;i++){
-                    valsComp2.add(new Entry(lastweekX[i], lastweekY[i]));
-                }
-
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
 
 
             }
         });
-
-
-        // last year button
-        Button lastyear  =(Button)findViewById(R.id.btn3);
-        lastyear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
-
-                List<Entry> valsComp2 = new ArrayList<>();
-
-
-                valsComp2.add(new Entry(1, 2));
-                valsComp2.add(new Entry(2, 0));
-                valsComp2.add(new Entry(3, 0));
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
-
-
-            }
-        });
-
-
-
-
 
 
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setBtn1Click(){
+        //lineChart = findViewById(R.id.lineChart);
+
+        btn1.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+        btn3.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+        btn1.setBackColor(getResources().getColor(R.color.ecogChartTopBlue));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
 
-
-
-
-
-
-
-
     /**
-     * 初始化折线图控件属性
+     * initialize the attributes of the line chart
      */
-    private void initLineChart(List<Entry> lineData) {
+    private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener(this);
         // 设置是否可以缩放图表
@@ -264,20 +237,52 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
 
         //自定义适配器，适配于X轴
-        String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
-        myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
+        //String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
+        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
+
+
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+        /*
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return xAxisDisplay.get((int) value); // xVal is a string array
+            }
+
+            @Override
+            public int getDecimalDigits() {
+                return 0;
+            }
+        });
+*/
+
+        if (lineData.size() > 0) {
+            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    if ((int) value >= lineData.size()) {
+                        return "";
+                    } else {
+                        return lineData.get((int) value).getData() + "";
+                    }
+                }
+            });
+        }
+
+        //xAxis.setValueFormatter((value, axis) -> lineData.get((int)      value).getData()+"");
+       // xAxis.setValueFormatter(formatter);
+
         xAxis.setGranularity(1f);
         xAxis.setAxisMinimum(1f);
-        xAxis.setValueFormatter(aoz);
+        //xAxis.setValueFormatter((value, axis) -> lineData.get((int)      value).getData()+"");
         xAxis.setDrawGridLines(false);
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setTextColor(Color.WHITE);
-        //xAxis.setLabelCount(xStrs.size(),true);
-        //xAxis.setLabelCount(3);
+        xAxis.setLabelCount(3,true);
+        //xAxis.setLabelCount(xAxisDisplay.size());
         // xAxis.setAxisMinimum(1f);  // from which data
 
         //自定义适配器，适配于Y轴
@@ -313,8 +318,6 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
     private void setLineChartData(List<Entry> lineData) {
 
 
-
-
         LineDataSet setComp1 = new LineDataSet(lineData, " Score ");
         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
         setComp1.setColor(Color.WHITE);
@@ -329,9 +332,10 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
         LineData lineChartData = new LineData(dataSets);
 
+
         lineChart.setData(lineChartData);
 
-        lineChart.invalidate();
+        lineChart.invalidate();// refresh
 
 
 
@@ -350,14 +354,17 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
 
         //自定义坐标轴适配器，设置在X轴
-        String[] xStrs = new String[]{ "","Grade0", "Grade1", "Grade2","Grade3","Grade4"};
-        int[] fourColor = new int[]{Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
-        int[] fiveColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
-        int[] sevenColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
+        //String[] xStrs = new String[]{ "","Grade0", "Grade1", "Grade2","Grade3","Grade4"};
+        String[] xStrs = new String[]{"", "Grade0", "Grade1", "Grade2","Grade3","Grade4"};
 
-
-
-
+        //int[] fourColor = new int[]{Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
+        int[] fiveColor = new int[]{
+                Color.rgb(0, 238, 0),
+                Color.rgb(0, 205, 0),
+                Color.rgb(102, 205, 0),
+                Color.rgb(238, 180, 34),
+                Color.rgb(255, 130, 71)};
+        //int[] sevenColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
 
         //自定义适配器，适配于X轴
         myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);// 自定义y轴
@@ -443,15 +450,8 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
             BarData data = new BarData(dataSets);
             data.setBarWidth(0.9f);
             data.setValueTextSize(10f);
+            data.setValueTextColor(Color.WHITE);
             set1.setColors(fourColor);
-
-
-
-
-
-
-
-
 
 
             hBarChart.setData(data);
@@ -460,56 +460,6 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
     private void iniView() {
         /* * * * * toolbar * * * * * */
-        // 第二行按钮
-        MyRoundCornerButton btn1 = (MyRoundCornerButton) findViewById(R.id.btn1);
-        MyRoundCornerButton btn2 = (MyRoundCornerButton) findViewById(R.id.btn2);
-        MyRoundCornerButton btn3 = (MyRoundCornerButton) findViewById(R.id.btn3);
-        //shape left to right: left corner, rectangle, right corner
-        btn1.setFillet(true);
-        btn1.setPartRadius(15, 0, 0, 15);
-        btn3.setFillet(true);
-        btn3.setPartRadius(0, 15, 15, 0);
-        //border
-        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
-        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
-        btn2.setBorderTop(true);
-        btn2.setBorderBottom(true);
-        btn2.setBorderWidth(5);
-        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopPurple));
-        //background color
-        btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn1.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
-        btn2.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
-        btn3.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
-        //text color
-        btn1.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn2.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn3.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn1.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        btn2.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        btn3.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        //text
-        btn1.setText(getResources().getString(R.string.chart_week));
-        btn2.setText(getResources().getString(R.string.chart_month));
-        btn3.setText(getResources().getString(R.string.chart_all));
-        //click
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn1", Toast.LENGTH_LONG).show();
-            }
-        });
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn2", Toast.LENGTH_LONG).show();
-            }
-        });
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn3", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         //used for setting icon-font
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");
@@ -528,7 +478,7 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         txt_menu_new.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(EcogChartActivity.this, BssSurveyActivity.class);
+                intent.setClass(EcogChartActivity.this, EcogSurveyActivity.class);
                 startActivity(intent);
 
             }
@@ -540,6 +490,41 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         });
 
         /* * * * * body * * * * * */
+
+        btn1 = (MyRoundCornerButton) findViewById(R.id.btn1);
+        btn2 = (MyRoundCornerButton) findViewById(R.id.btn2);
+        btn3 = (MyRoundCornerButton) findViewById(R.id.btn3);
+        //shape left to right: left corner, rectangle, right corner
+        btn1.setFillet(true);
+        btn1.setPartRadius(15, 0, 0, 15);
+        btn3.setFillet(true);
+        btn3.setPartRadius(0, 15, 15, 0);
+        //border
+        btn1.setStroke(3, getResources().getColor(R.color.ecogChartTopBlue));
+        btn3.setStroke(3, getResources().getColor(R.color.ecogChartTopBlue));
+        btn2.setBorderTop(true);
+        btn2.setBorderBottom(true);
+        btn2.setBorderWidth(5);
+        btn2.setBorderColor(getResources().getColor(R.color.ecogChartTopBlue));
+        //background color
+        btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        //text color
+        btn1.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+        btn2.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+        btn3.setTextColori(getResources().getColor(R.color.ecogChartTopBlue));
+        //text
+        btn1.setText(getResources().getString(R.string.chart_week));
+        btn2.setText(getResources().getString(R.string.chart_month));
+        btn3.setText(getResources().getString(R.string.chart_all));
+
+        //chart
+        hBarChart = findViewById(R.id.hBarChart);
+        lineChart = findViewById(R.id.lineChart);
+
+        txt_overview = findViewById(R.id.overview);
+        txt_date_range = findViewById(R.id.textView13);
 
 
     }
@@ -553,6 +538,237 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
     public void onNothingSelected() {
 
     }
+
+
+    //set view shows when no data available
+    private void setNoDataView(){
+        lineChart.setNoDataText("No chart data available");
+        lineChart.setNoDataTextColor(getResources().getColor(R.color.white));
+        hBarChart.setNoDataText("");
+        txt_date_range.setText("");
+        txt_overview.setText("");
+    }
+
+    //get data: last week
+    private void getDataLastWeek() {
+        // Get a reference to our record
+
+        Query filter = userRef.orderByChild("time").startAt(DateLastWeekMon).endAt(DateLastWeekSun);
+        // Attach an listener to read the data at our posts reference
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateWeek = new ArrayList<>();
+                typeIdWeek = new ArrayList<>();
+                Log.e("WEEK ", "-- There are " +String.valueOf(snapshot.getChildrenCount()));
+                if (snapshot.exists()){
+                    for (DataSnapshot bssSnapshot: snapshot.getChildren()) {
+                        EcogAndBssAnswerModel bssA = bssSnapshot.getValue(EcogAndBssAnswerModel.class);
+                        String answerDate = bssA.getTime();
+                        dateWeek.add(answerDate);
+                        int type = bssA.getType();
+                        typeIdWeek.add(type);
+
+                        Log.e("Go to", "getMonthChartData");
+                        getWeekChartData();
+                    }
+                }else{
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+
+
+    }
+    private void getWeekChartData(){
+        if (!dateWeek.isEmpty()){
+            //set text for time ranges for bar chart
+            txt_overview.setText(getResources().getString(R.string.overview));
+            txt_date_range.setText(TimeMethods.getDateRange(dateWeek, dateWeek.size(), false));
+
+            lineWeek = new ArrayList<>();
+            barWeekEntry = new ArrayList<>();
+            barWeek = new int[]{0,0,0,0,0,0};
+            dateIdWeek = TimeMethods.getDayDuration(dateWeek, dateWeek.size());
+            //dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
+            for(int j = 0; j < dateIdWeek.length; j++){
+
+                String[] label = TimeMethods.getXAxisText(dateWeek, dateWeek.size(), false);
+                lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j),label[j]));
+                // lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
+
+                for(int k = 1; k < barWeek.length; k++){
+                    if(typeIdWeek.get(j) == k - 1){
+                        barWeek[k] = barWeek[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 1; k < barWeek.length; k++){
+                barWeekEntry.add(new BarEntry(k, barWeek[k]));
+            }
+
+            initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
+            // String[] xAxis = TimeMethods.getXAxisText(dateWeek, dateWeek.size(), false);
+            // List<String> xAxisDisplay = TimeMethods.getXAxis(dateWeek, dateWeek.size(), false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineWeek);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
+    }
+    //get data: last month
+    private void getDataLastMonth() {
+        // Get a reference to our record
+        Query filter = userRef.orderByChild("time").startAt(DateLastMonthFirst).endAt(DateLastMonthLast);
+        // Attach an listener to read the data at our posts reference
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateMonth = new ArrayList<>();
+                typeIdMonth = new ArrayList<>();
+                Log.e("MONTH ", "-- There are " +String.valueOf(snapshot.getChildrenCount()));
+                for (DataSnapshot bssSnapshot: snapshot.getChildren()) {
+                    //add the data to the arraylist
+                    EcogAndBssAnswerModel bssA = bssSnapshot.getValue(EcogAndBssAnswerModel.class);
+                    String answerDate = bssA.getTime();
+                    dateMonth.add(answerDate);
+                    int type = bssA.getType();
+                    typeIdMonth.add(type);
+
+                    //Log.e("MONTH ", answerDate +": "+type);
+
+                    Log.e("Go to", "getMonthChartData");
+                    getMonthChartData();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+    }
+    private void getMonthChartData(){
+        if (!dateMonth.isEmpty()){
+            //set text for time ranges for bar chart
+            txt_overview.setText(getResources().getString(R.string.overview));
+            txt_date_range.setText(TimeMethods.getDateRange(dateMonth, dateMonth.size(), false));
+
+            lineMonth = new ArrayList<>();
+            barMonthEntry = new ArrayList<>();
+            barMonth = new int[]{0,0,0,0,0,0};
+            dateIdMonth = TimeMethods.getDayDuration(dateMonth, dateMonth.size());
+            //dateIdMonth = getDurationEqual(dateMonth, dateMonth.size());
+
+            for(int j = 0; j < dateIdMonth.length; j++){
+                String[] label = TimeMethods.getXAxisText(dateMonth, dateMonth.size(), false);
+                lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j),label[j]));
+                //lineMonth.add(new Entry(dateIdMonth[j], typeIdMonth.get(j)));
+                for(int k = 1; k < barMonth.length; k++){
+                    if(typeIdMonth.get(j) == k - 1){
+                        barMonth[k] = barMonth[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 1; k < barMonth.length; k++){
+                barMonthEntry.add(new BarEntry(k, barMonth[k]));
+            }
+
+            initHBarChart(barMonthEntry);  //统计完以后插入纵坐标就好
+            //List<String> xAxisDisplay = TimeMethods.getXAxis(dateMonth, dateMonth.size(), false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineMonth);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
+    }
+    //get data: all
+    private void getDataAll() {
+        // Get a reference to our record
+        // Attach an listener to read the data at our posts reference
+        Query filter = userRef.orderByChild("time");
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateAll = new ArrayList<>();
+                typeIdAll = new ArrayList<>();
+                Log.e("ALL ", "-- There are " +String.valueOf(snapshot.getChildrenCount()));
+                for (DataSnapshot bssSnapshot: snapshot.getChildren()) {
+                    //add the data to the arraylist
+                    EcogAndBssAnswerModel bssA = bssSnapshot.getValue(EcogAndBssAnswerModel.class);
+                    String answerDate = bssA.getTime();
+                    dateAll.add(answerDate);
+                    int type = bssA.getType();
+                    typeIdAll.add(type);
+                    Log.e("ALL ", answerDate +": "+type);
+
+                    Log.e("Go to", "getMonthChartData");
+                    getAllChartData();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+    }
+    private void getAllChartData(){
+        if (!dateAll.isEmpty()){
+            //set text for time ranges for bar chart
+            txt_overview.setText(getResources().getString(R.string.overview));
+            txt_date_range.setText(TimeMethods.getDateRange(dateAll, dateAll.size(), false));
+
+            lineAll = new ArrayList<>();
+            barAllEntry = new ArrayList<>();
+            barAll = new int[]{0,0,0,0,0,0};
+            dateIdAll = TimeMethods.getDayDuration(dateAll, dateAll.size());
+            //dateIdAll = getDurationEqual(dateAll, dateAll.size());
+            for(int j = 0; j < dateIdAll.length; j++){
+                String[] label = TimeMethods.getXAxisText(dateAll, dateAll.size(), false);
+                lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j),label[j]));
+                //lineAll.add(new Entry(dateIdAll[j], typeIdAll.get(j)));
+                for(int k = 1; k < barAll.length; k++){
+                    if(typeIdAll.get(j) == k - 1){
+                        barAll[k] = barAll[k] + 1;
+                    }
+                }
+            }
+
+            for (int k = 1; k < barAll.length; k++){
+                barAllEntry.add(new BarEntry(k , barAll[k]));
+            }
+
+            initHBarChart(barAllEntry);  //统计完以后插入纵坐标就好
+            //List<String> xAxisDisplay = TimeMethods.getXAxis(dateAll, dateAll.size(), false);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineAll);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            setNoDataView();
+        }
+    }
+
+
+
 }
 
 

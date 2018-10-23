@@ -414,6 +414,7 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
+            data.setValueTextColor(Color.WHITE);
             data.setBarWidth(0.9f);
             data.setValueTextSize(10f);
             set1.setColors(fourColor);

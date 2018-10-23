@@ -78,7 +78,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
         iniView();
     }
     private void sendData(){
-        String date = "2018-10-18";
+        String date = "2018-10-24";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象

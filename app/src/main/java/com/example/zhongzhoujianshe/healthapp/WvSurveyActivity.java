@@ -206,7 +206,7 @@ public class WvSurveyActivity extends AppCompatActivity{
 
     private void sendData(){
         //date = qolResult.getDate();
-        time = "2018-10-17-19-23";
+        time = "2018-10-24-19-23";
         weight = et_weight.getEtText();
         height = et_height.getEtText();
         bmi_s = et_bmi.getEtText();

@@ -365,7 +365,7 @@ public class QolSurveyActivity extends AppCompatActivity{
         });
     }
     private void sendData(){
-        date = "2018-09-10";
+        date = "2018-10-24";
         //date = qolResult.getDate();
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();

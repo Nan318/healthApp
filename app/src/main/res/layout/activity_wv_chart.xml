@@ -120,23 +120,33 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:text="(2018-2019)"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/overview"
             app:layout_constraintTop_toBottomOf="@+id/lineChart"
-            android:textColor="@color/white"/>
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:text="@string/overview"
             android:textColor="@color/white"
             android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/tableLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+            app:layout_constraintTop_toBottomOf="@+id/lineChart"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TableLayout
             android:id="@+id/tableLayout"
@@ -145,11 +155,12 @@
 
 
             android:layout_height="130dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent">
 
             <TableRow
@@ -159,9 +170,9 @@
 
                 <TextView
                     android:id="@+id/textView10"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -180,8 +191,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="Max"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="147dp"
                     tools:layout_editor_absoluteY="384dp" />
 
@@ -191,8 +202,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="Avg"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="34dp"
                     tools:layout_editor_absoluteY="384dp" />
             </TableRow>
@@ -215,8 +226,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:text="TextView"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -224,8 +235,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:text="TextView"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -275,6 +286,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="TextView"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -314,8 +326,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:text="TextView"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
         </TableLayout>
@@ -323,11 +335,11 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="0dp"
-            android:layout_height="330dp"
+            android:layout_height="333dp"
             android:layout_margin="10dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"

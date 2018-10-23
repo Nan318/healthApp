@@ -3,13 +3,18 @@ package com.example.zhongzhoujianshe.healthapp;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -17,27 +22,25 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         //check for user authorization
+
         /*
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentFirebaseUser == null){
             Intent intent = new Intent();
             intent.setClass(MainMenu.this, LoginActivity.class);
-            //intent.putExtra("Name", "feng88724");
             startActivity(intent);
         }*/
 
         // set iconfont
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");//记得加上这句
 
-        /* Button bbb = (Button) findViewById(R.id.button);
-        bbb.setTypeface(font);*/
 
         TextView run = (TextView) findViewById(R.id.runtext);
         run.setTypeface(font);
@@ -51,6 +54,16 @@ public class MainMenu extends AppCompatActivity {
         catalog.setTypeface(font);
         TextView inbox= (TextView) findViewById(R.id.inbox);
         inbox.setTypeface(font);
+
+        catalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(MainMenu.this, view);
+                popup.setOnMenuItemClickListener(MainMenu.this);
+                popup.inflate(R.menu.main_catalog_menu);
+                popup.show();
+            }
+        });
 
         /* * * * * go to function pages * * * * * */
 
@@ -136,5 +149,19 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.signout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent();
+                intent.setClass(MainMenu.this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return false;
+
+        }
+    }
 }
 

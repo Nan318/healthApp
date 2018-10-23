@@ -67,50 +67,49 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/round_ret_gradient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_margin="2dp"
+        android:background="@drawable/round_rectangle_chart"
+        android:padding="0dip">
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/chartDarkBlue"
-            android:orientation="horizontal">
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="18dp"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
 
             <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
-                android:id="@+id/btn4"
+                android:id="@+id/btn1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:paddingBottom="7dp"
                 android:paddingTop="7dp"
+                android:paddingBottom="7dp"
                 android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
 
             <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
-                android:id="@+id/btn5"
+                android:id="@+id/btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:paddingBottom="7dp"
                 android:paddingTop="7dp"
+                android:paddingBottom="7dp"
                 android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
 
             <com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton
-                android:id="@+id/btn6"
+                android:id="@+id/btn3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:paddingBottom="7dp"
                 android:paddingTop="7dp"
+                android:paddingBottom="7dp"
                 android:text="com.example.zhongzhoujianshe.healthapp.MyRoundCornerButton" />
 
             <TextView
@@ -133,8 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
             android:gravity="right"
-            android:text="A Little"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@+id/lineChart"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -145,28 +143,36 @@
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:text="OVERVIEW"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+
+        <TextView
+            android:id="@+id/date_range"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/overview"
             app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
             android:text="Do you have any trouble doing strenous activities,like carring a heavy shopping bag or a suitcase?"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/hBarChart"
@@ -187,13 +193,13 @@
             android:layout_width="302dp"
             android:layout_height="251dp"
             android:layout_margin="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.771"
+            app:layout_constraintHorizontal_bias="0.545"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -201,10 +207,9 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="118dp"
+            android:layout_marginTop="128dp"
             android:gravity="right"
-            android:text="Very Much"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@+id/lineChart"
             app:layout_constraintHorizontal_bias="1.0"
@@ -217,8 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
             android:gravity="right"
-            android:text="Quite a Bit"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@+id/lineChart"
             app:layout_constraintHorizontal_bias="1.0"
@@ -231,8 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="31dp"
             android:gravity="right"
-            android:text="Not at All"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/white"
             android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@+id/lineChart"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />

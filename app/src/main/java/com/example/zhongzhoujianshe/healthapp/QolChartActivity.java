@@ -9,7 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -33,18 +37,19 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class QolChartActivity extends AppCompatActivity implements OnChartValueSelectedListener {
-
-    // initial chart
-    private HorizontalBarChart hBarChart;
-    private LineChart lineChart;
-
-
+public class QolChartActivity extends AppCompatActivity
+        implements OnChartValueSelectedListener,PopupMenu.OnMenuItemClickListener {
     @RequiresApi(api = Build.VERSION_CODES.N)
 
     //UI objects
@@ -52,11 +57,42 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_new;
+    //body
+    private MyRoundCornerButton btn1;
+    private MyRoundCornerButton btn2;
+    private MyRoundCornerButton btn3;
+    private HorizontalBarChart hBarChart;
+    private LineChart lineChart;
+    private TextView txt_date_range;
+    private TextView txt_overview;
+    private TextView txt_much;
+    private TextView txt_little;
+    private TextView txt_bit;
+    private TextView txt_not;
+
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    //data
+    private ArrayList<String> dateStr;
+    private int[] dateId;  //line: x, converted from dateStr
+    private ArrayList<String> valuesY;   //line:  string
+    private int[] yline;//line: y, converted from valuesY    ; when click popup items, change this dataset ; get from valueWeek
+    private int menu_Selected = 1; // default 1 means choose question1 ...
+
+    //charts
+    private List<Entry> lineEntry;
+    private ArrayList<BarEntry> barEntry;
+    private int[] barCount;
+    //variables
+    private String DateLastWeekMon;
+    private String DateLastWeekSun;
+    private String DateLastMonthFirst;
+    private String DateLastMonthLast;
 
     @Override
     public void onStart() {
@@ -76,6 +112,26 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qol_chart);
 
+        /* * * * * initialize view  * * * * * */
+        iniView();
+
+        /* * * * * get date of today, last month and last week * * * * * */
+
+        //get today's date
+        //DateToday = TimeMethods.getDateToday();
+        //Log.e("today","----"+DateToday);
+
+        //get last week (date range)
+        //Date date = new Date();
+        String[] lastweek = TimeMethods.getDateLastWeek();
+        DateLastWeekMon = lastweek[0];
+        DateLastWeekSun = lastweek[1];
+
+        //get last month
+        String[] lastmonth = TimeMethods.getDateLastMonth();
+        DateLastMonthLast = lastmonth[1];
+        DateLastMonthFirst = lastmonth[0];
+
         /* * * * * firebase * * * * * */
         //get Uid
         mAuth = FirebaseAuth.getInstance();
@@ -86,150 +142,73 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
                 if (user != null) {
                     // User is signed in
                     currentUserId = user.getUid();
+                    Log.e("TAG", "onAuthStateChanged:signed_in:" + currentUserId);
+
+                    getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                    // getChartData();
+                    setBtn1Click();   //same as default
+                }else {
+                    Log.e("TAG", "onAuthStateChanged:signed_out");
                 }
             }
         };
 
-        /* * * * * initialize view  * * * * * */
-        iniView();
+//click
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataLastWeek(); //get data for : dateWeek & typeIdWeek & barWeek
+                // getChartData();
+                setBtn1Click();   //same as default
+            }
+        });
 
-        //innitial line data
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataLastMonth(); //get data for : dateWeek & typeIdWeek & barWeek
 
-        List<Entry> valsComp1 = new ArrayList<>();
-
-
-        valsComp1.add(new Entry(1, 2));
-        valsComp1.add(new Entry(2, 0));
-        valsComp1.add(new Entry(3, 0));
-        valsComp1.add(new Entry(6, 1));
-        valsComp1.add(new Entry(7, 2));
-        valsComp1.add(new Entry(8, 3));
-
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        yVals1.add(new BarEntry(1, 3));
-        yVals1.add(new BarEntry(2, 4));
-        yVals1.add(new BarEntry(3, 5));
-        yVals1.add(new BarEntry(4, 6));
-        yVals1.add(new BarEntry(5, 10));
-
-
-//connect
-        hBarChart = findViewById(R.id.hBarChart);
-        lineChart = findViewById(R.id.lineChart);
-
-
-        initHBarChart(yVals1);  //统计完以后插入纵坐标就好
-        initLineChart(valsComp1);
-
-
-        // last week button
-        Button lastweek = (Button) findViewById(R.id.btn4);
-        lastweek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                lineChart = findViewById(R.id.lineChart);
-
-                List<Entry> valsComp2 = new ArrayList<>();
-
-
-                valsComp2.add(new Entry(1, 2));
-                valsComp2.add(new Entry(2, 0));
-                valsComp2.add(new Entry(3, 0));
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-
-
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
-
+                btn2.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+                btn3.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+                btn2.setBackColor(getResources().getColor(R.color.qolChartTopPurple));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
             }
         });
 
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                getDataAll(); //get data for : dateWeek & typeIdWeek & barWeek
+                // getChartData();
 
-        // last month button
-        Button lastmonth = (Button) findViewById(R.id.btn5);
-        lastmonth.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
-                int[] lastweekX = {1, 2, 3};
-                int[] lastweekY = {2, 4, 5};
-
-                List<Entry> valsComp2 = new ArrayList<>();
-                for (int i = 0; i < lastweekX.length; i++) {
-                    valsComp2.add(new Entry(lastweekX[i], lastweekY[i]));
-                }
-
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
-
+                btn3.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+                btn2.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+                btn1.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+                btn3.setBackColor(getResources().getColor(R.color.qolChartTopPurple));
+                btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+                btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
 
             }
         });
 
-
-        // last year button
-        Button lastyear = (Button) findViewById(R.id.btn6);
-        lastyear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lineChart = findViewById(R.id.lineChart);
-
-                List<Entry> valsComp2 = new ArrayList<>();
-
-
-                valsComp2.add(new Entry(1, 2));
-                valsComp2.add(new Entry(2, 0));
-                valsComp2.add(new Entry(3, 0));
-
-                initLineChart(valsComp2);
-
-                ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-
-                yVals2.add(new BarEntry(1, 12));
-                yVals2.add(new BarEntry(2, 4));
-                yVals2.add(new BarEntry(3, 5));
-                yVals2.add(new BarEntry(4, 6));
-                yVals2.add(new BarEntry(5, 1));
-                hBarChart = findViewById(R.id.hBarChart);
-                initHBarChart(yVals2);  //统计完以后插入纵坐标就好
-
-
-            }
-        });
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
 
+    public void setBtn1Click(){
+        btn1.setTextColori(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn1.setBackColor(getResources().getColor(R.color.qolChartTopPurple));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+    }
 
     /**
      * 初始化折线图控件属性
      */
-    private void initLineChart(List<Entry> lineData) {
+    private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
         // 设置是否可以缩放图表
@@ -246,15 +225,28 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
 
 
         //自定义适配器，适配于X轴
-        String[] xStrs = new String[]{ "","what", "噢", "冬","sha","k","cat","l","s","end"}; // 线图横坐标文字
-        myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
+        //String[] xStrs = new String[]{ "","what", "噢", "冬","sha","k","cat","l","s","end"}; // 线图横坐标文字
+        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+        if (lineData.size() > 0) {
+            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    if ((int) value >= lineData.size()) {
+                        return "";
+                    } else {
+                        return lineData.get((int) value).getData() + "";
+                    }
+                }
+            });
+        }
+
         xAxis.setGranularity(1f);
         xAxis.setAxisMinimum(0f);
-        xAxis.setValueFormatter(aoz);
+        //xAxis.setValueFormatter(aoz);
         xAxis.setDrawGridLines(false);
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setTextColor(Color.WHITE);
@@ -278,7 +270,13 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
         leftAxis.setAxisLineColor(Color.WHITE);
         leftAxis.setTextColor(Color.WHITE);
 
-
+        Legend l = lineChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setFormSize(8f);
+        l.setTextColor(Color.WHITE);
 
         setLineChartData(lineData);
     }
@@ -308,10 +306,6 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
 
 
     }
-
-
-
-
 
     private void initHBarChart(ArrayList<BarEntry> barDataset) {
         hBarChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
@@ -445,26 +439,9 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
 
     }
 
-    private float getRandom(float range, float startsfrom) {
-        return (float) (Math.random() * range) + startsfrom;
-    }
-
-
-
-    public static void startActivity(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, MainMenu.class);
-        context.startActivity(intent);
-    }
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void iniView() {
         /* * * * * toolbar * * * * * */
-
         //used for setting icon-font
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");
         toolbar = (Toolbar) findViewById(R.id.bssNewToolbar);
@@ -480,6 +457,15 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
         //set icon-font: cog
         TextView txt_menu_cog = (TextView) toolbar.findViewById(R.id.toolbar_cog);
         txt_menu_cog.setTypeface(font);
+        txt_menu_cog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(QolChartActivity.this, view);
+                popup.setOnMenuItemClickListener(QolChartActivity.this);
+                popup.inflate(R.menu.qol_chart_menu);
+                popup.show();
+            }
+        });
 
         //set click event
         txt_menu_new.setOnClickListener(new View.OnClickListener() {
@@ -498,61 +484,34 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
 
         /* * * * * body * * * * * */
 
-        initialComBtn();
-    }
-    public void initialComBtn(){
-        // 第三行按钮
-        MyRoundCornerButton btn4 = (MyRoundCornerButton) findViewById(R.id.btn4);
-        MyRoundCornerButton btn5 = (MyRoundCornerButton) findViewById(R.id.btn5);
-        MyRoundCornerButton btn6 = (MyRoundCornerButton) findViewById(R.id.btn6);
+        btn1 = (MyRoundCornerButton) findViewById(R.id.btn1);
+        btn2 = (MyRoundCornerButton) findViewById(R.id.btn2);
+        btn3 = (MyRoundCornerButton) findViewById(R.id.btn3);
         //shape left to right: left corner, rectangle, right corner
-        btn4.setFillet(true);
-        btn4.setPartRadius(15, 0, 0, 15);
-        btn6.setFillet(true);
-        btn6.setPartRadius(0, 15, 15, 0);
+        btn1.setFillet(true);
+        btn1.setPartRadius(15, 0, 0, 15);
+        btn3.setFillet(true);
+        btn3.setPartRadius(0, 15, 15, 0);
         //border
-        btn4.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
-        btn6.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
-        btn5.setBorderTop(true);
-        btn5.setBorderBottom(true);
-        btn5.setBorderWidth(5);
-        btn5.setBorderColor(getResources().getColor(R.color.qolChartTopPurple));
+        btn1.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setStroke(3, getResources().getColor(R.color.qolChartTopPurple));
+        btn2.setBorderTop(true);
+        btn2.setBorderBottom(true);
+        btn2.setBorderWidth(5);
+        btn2.setBorderColor(getResources().getColor(R.color.qolChartTopPurple));
         //background color
-        btn4.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn5.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn6.setBackColor(getResources().getColor(R.color.chartDarkBlue));
-        btn4.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
-        btn5.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
-        btn6.setBackColorSelected(getResources().getColor(R.color.qolChartTopPurple));
+        btn1.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn2.setBackColor(getResources().getColor(R.color.chartDarkBlue));
+        btn3.setBackColor(getResources().getColor(R.color.chartDarkBlue));
         //text color
-        btn4.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn5.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn6.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
-        btn4.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        btn5.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        btn6.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
+        btn1.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn2.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
+        btn3.setTextColori(getResources().getColor(R.color.qolChartTopPurple));
         //text
-        btn4.setText(getResources().getString(R.string.chart_week));
-        btn5.setText(getResources().getString(R.string.chart_month));
-        btn6.setText(getResources().getString(R.string.chart_all));
-        //click
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn4", Toast.LENGTH_LONG).show();
-            }
-        });
-        btn5.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn5", Toast.LENGTH_LONG).show();
-            }
-        });
-        btn6.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click btn6", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //used for setting icon-font
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");
+        btn1.setText(getResources().getString(R.string.chart_week));
+        btn2.setText(getResources().getString(R.string.chart_month));
+        btn3.setText(getResources().getString(R.string.chart_all));
+
         TextView txt_date = (TextView) findViewById(R.id.txt_date);
         txt_date.setTypeface(font);
         //set click event
@@ -561,5 +520,605 @@ public class QolChartActivity extends AppCompatActivity implements OnChartValueS
                 Toast.makeText(getApplicationContext() , "choose date" , Toast.LENGTH_SHORT).show();
             }
         });
+
+        //chart
+        hBarChart = findViewById(R.id.hBarChart);
+        lineChart = findViewById(R.id.lineChart);
+
+        txt_overview = findViewById(R.id.overview);
+        txt_date_range = findViewById(R.id.date_range);
+        txt_much = findViewById(R.id.textView3);
+        txt_little = findViewById(R.id.textView5);
+        txt_bit = findViewById(R.id.textView4);
+        txt_not = findViewById(R.id.textView6);
+    }
+
+    //set view shows when no data available
+    public void setNoDataView(){
+        lineChart.setNoDataText("No chart data available");
+        lineChart.setNoDataTextColor(getResources().getColor(R.color.white));
+        txt_date_range.setText("");
+        txt_overview.setText("");
+        txt_much.setText("");
+        txt_little.setText("");
+        txt_bit.setText("");
+        txt_not.setText("");
+
+    }
+
+    //get data: last week
+    private void getDataLastWeek() {
+        Log.e("Start", "getDataLastWeek");
+        // Get a reference to our record
+        mRoot = FirebaseDatabase.getInstance().getReference();
+        userRef = mRoot.child(currentUserId).child("qol");
+        Query filter = userRef.orderByChild("date").startAt(DateLastWeekMon).endAt(DateLastWeekSun);
+        // Attach an listener to read the data at our posts reference
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateStr = new ArrayList<>();
+                valuesY = new ArrayList<>();
+                Log.e("WEEK ", "-- There are " + String.valueOf(snapshot.getChildrenCount()));
+                if (snapshot.exists()){
+                    for (DataSnapshot wvSnapshot: snapshot.getChildren()) {
+
+                        Map<String, String> qolA = (Map)wvSnapshot.getValue();
+                        String answerDate = qolA.get("date");
+
+                        dateStr.add(answerDate);
+
+                        String answerForSelectedQ = qolA.get(String.valueOf(menu_Selected));
+
+                        valuesY.add(answerForSelectedQ);
+
+                        Log.e("Go to", "getChartData");
+                        getChartData();
+                    }
+                }else{
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+
+
+    }
+    //get data: last month
+    private void getDataLastMonth() {
+        Log.e("Start", "getDataLastMonth");
+
+        // Get a reference to our record
+        mRoot = FirebaseDatabase.getInstance().getReference();
+        userRef = mRoot.child(currentUserId).child("qol");
+        Query filter = userRef.orderByChild("date").startAt(DateLastMonthFirst).endAt(DateLastMonthLast);
+        // Attach an listener to read the data at our posts reference
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateStr = new ArrayList<>();
+                valuesY = new ArrayList<>();
+                Log.e("MONTH ", "-- There are " +String.valueOf(snapshot.getChildrenCount()));
+                if (snapshot.exists()){
+                    for (DataSnapshot wvSnapshot: snapshot.getChildren()) {
+                        Map<String, String> qolA = (Map)wvSnapshot.getValue();
+                        String answerDate = qolA.get("date");
+
+                        dateStr.add(answerDate);
+
+                        String answerForSelectedQ = qolA.get(String.valueOf(menu_Selected));
+
+                        valuesY.add(answerForSelectedQ);
+
+                        Log.e("Go to", "getChartData");
+                        getChartData();
+                    }
+                }else{
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+    }
+    //get data: all
+    private void getDataAll() {
+        Log.e("Start", "getDataAll");
+
+        mRoot = FirebaseDatabase.getInstance().getReference();
+        userRef = mRoot.child(currentUserId).child("qol");
+        // Get a reference to our record
+        // Attach an listener to read the data at our posts reference
+        Query filter = userRef.orderByChild("date");
+        filter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                dateStr = new ArrayList<>();
+                valuesY = new ArrayList<>();
+                Log.e("ALL ", "-- There are " +String.valueOf(snapshot.getChildrenCount()));
+                if (snapshot.exists()){
+                    for (DataSnapshot wvSnapshot: snapshot.getChildren()) {
+
+                        Map<String, String> qolA = (Map)wvSnapshot.getValue();
+                        String answerDate = qolA.get("date");
+
+                        dateStr.add(answerDate);
+
+                        String answerForSelectedQ = qolA.get(String.valueOf(menu_Selected));
+
+                        valuesY.add(answerForSelectedQ);
+
+                        Log.e("Go to", "getChartData");
+                        getChartData();
+                    }
+                }else{
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: ",databaseError.getMessage());
+            }
+
+        });
+
+        Log.e("getDataAll", "after get, dateStr size: " + String.valueOf(dateStr.size()));
+
+    }
+
+
+
+    public void getChartData(){
+//        Log.e("getChartData", "is empty:"+ String.valueOf(dateStr.isEmpty()));
+
+        if (!dateStr.isEmpty()){
+            //set text for time ranges for bar chart
+
+            txt_overview.setText(getResources().getString(R.string.overview));
+            txt_date_range.setText(TimeMethods.getDateRange(dateStr, dateStr.size(), false));
+            txt_much.setText(getResources().getString(R.string.qol_surAnswer_much));
+            txt_little.setText(getResources().getString(R.string.qol_surAnswer_little));
+            txt_bit.setText(getResources().getString(R.string.qol_surAnswer_bit));
+            txt_not.setText(getResources().getString(R.string.qol_surAnswer_not));
+
+            lineEntry = new ArrayList<>();
+            barEntry = new ArrayList<>();
+            barCount = new int[]{0,0,0,0,0};
+
+            dateId = TimeMethods.getDayDuration(dateStr, dateStr.size());
+
+            if (valuesY.size() != 0 ){  //has available data
+                yline = new int[valuesY.size()];
+                for (int i = 0; i < valuesY.size(); i ++){
+                    switch (valuesY.get(i)){
+                        case "Not at All":
+                            yline[i] = 0;
+                            break;
+                        case "A Little":
+                            yline[i] = 1;
+                            break;
+                        case "Quite a Bit":
+                            yline[i] = 2;
+                            break;
+                        case "Very Much":
+                            yline[i] = 3;
+                            break;
+                    }
+
+                }
+            }
+            if (yline.length != 0 ){
+                //dateIdWeek = getDurationEqual(dateWeek, dateWeek.size());
+                for(int j = 0; j < dateId.length; j++){
+
+                    List<String> label = TimeMethods.getEveryLabel(dateStr, dateStr.size(), false);
+
+                    lineEntry.add(new Entry(dateId[j], yline[j],label.get(j)));
+
+                    // lineWeek.add(new Entry(dateIdWeek[j], typeIdWeek.get(j)));
+
+                    for(int k = 1; k < barCount.length; k++){
+                        if(yline[j] == k - 1){
+                            barCount[k] = barCount[k] + 1;
+                        }
+                    }
+                }
+                for (int k = 1; k < barCount.length; k++){
+                    barEntry.add(new BarEntry(k, barCount[k]));
+                }
+            }
+
+            initHBarChart(barEntry);  //统计完以后插入纵坐标就好
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                initLineChart(lineEntry);
+            }
+            lineChart.isDrawMarkersEnabled();
+            lineChart.setDrawMarkers(true);
+        }else {
+            lineChart.setNoDataText("No chart data available");
+            lineChart.setNoDataTextColor(getResources().getColor(R.color.white));
+            txt_date_range.setText("");
+            txt_overview.setText("");
+            txt_much.setText("");
+            txt_little.setText("");
+            txt_bit.setText("");
+            txt_not.setText("");
+        }
+    }
+
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        Log.e("WVCHART", "cog menu selected: " + menuItem.getTitle());
+        switch (menuItem.getItemId()) {
+            case R.id.q1:
+                menu_Selected = 1;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q2:
+                menu_Selected = 2;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q3:
+                menu_Selected = 3;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q4:
+                menu_Selected = 4;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q5:
+                menu_Selected = 5;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q6:
+                menu_Selected = 6;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q7:
+                menu_Selected = 7;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q8:
+                menu_Selected = 8;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q9:
+                menu_Selected = 9;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q10:
+                menu_Selected = 10;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q11:
+                menu_Selected = 11;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q12:
+                menu_Selected = 12;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q13:
+                menu_Selected = 13;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q14:
+                menu_Selected = 14;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q15:
+                menu_Selected = 15;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q16:
+                menu_Selected = 16;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q17:
+                menu_Selected = 17;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q18:
+                menu_Selected = 18;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q19:
+                menu_Selected = 19;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q20:
+                menu_Selected = 20;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q21:
+                menu_Selected = 21;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q22:
+                menu_Selected = 22;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q23:
+                menu_Selected = 23;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q24:
+                menu_Selected = 24;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q25:
+                menu_Selected = 25;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q26:
+                menu_Selected = 26;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q27:
+                menu_Selected = 27;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q28:
+                menu_Selected = 28;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q29:
+                menu_Selected = 29;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q30:
+                menu_Selected = 30;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q31:
+                menu_Selected = 31;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q32:
+                menu_Selected = 32;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q33:
+                menu_Selected = 33;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q34:
+                menu_Selected = 34;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q35:
+                menu_Selected = 35;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q36:
+                menu_Selected = 36;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q37:
+                menu_Selected = 37;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q38:
+                menu_Selected = 38;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q39:
+                menu_Selected = 39;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q40:
+                menu_Selected = 40;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q41:
+                menu_Selected = 41;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q42:
+                menu_Selected = 42;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q43:
+                menu_Selected = 43;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q44:
+                menu_Selected = 44;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q45:
+                menu_Selected = 45;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q46:
+                menu_Selected = 46;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q47:
+                menu_Selected = 47;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q48:
+                menu_Selected = 48;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q49:
+                menu_Selected = 49;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q50:
+                menu_Selected = 50;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            case R.id.q51:
+                menu_Selected = 51;
+                getDataLastWeek();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setBtn1Click();
+                }
+                return true;
+            default:
+                return false;
+        }
     }
 }

@@ -54,10 +54,11 @@ import java.util.Map;
 public class WvChartActivity extends AppCompatActivity
         implements OnChartValueSelectedListener,PopupMenu.OnMenuItemClickListener {
     //UI objects
-    //toolbar part
+    //toolbar
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_new;
+    //body
     private MyRoundCornerButton btn1;
     private MyRoundCornerButton btn2;
     private MyRoundCornerButton btn3;
@@ -80,7 +81,6 @@ public class WvChartActivity extends AppCompatActivity
     private TextView table_bmi_min;
     private TextView table_bmi_max;
     private TextView table_bmi_avg;
-    private TableLayout tableLayout;
 
     //firebase
     private String currentUserId;
@@ -95,9 +95,6 @@ public class WvChartActivity extends AppCompatActivity
     private ArrayList<float[]> valuesY;   //line:  ; for the float[]: [0] is weight,[1] is height, [2] is bmi
     private float[] yline;//line: y    ; when click popup items, change this dataset ; get from valueWeek
     private int menu_Selected = 0; // default 0 means choose weight ; 1 for height; 2 for bmi
-
-
-
 
     // Double[0][0]: min of weight; [0][1]: max of weight; [0][2]: avg of weight
     // Double[1][0]: min of height; [1][1]: max of height; [1][2]: avg of height

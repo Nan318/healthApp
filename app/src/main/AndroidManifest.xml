@@ -15,7 +15,9 @@
         <activity android:name=".QolSurveyActivity" >
 
         </activity>
-        <activity android:name=".BssSurveyActivity" />
+        <activity android:name=".BssSurveyActivity" >
+
+        </activity>
         <activity android:name=".MainMenu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

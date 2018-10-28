@@ -76,15 +76,14 @@
             tools:layout_width="match_parent"
             tools:textColor="#ffffff" />
 
-        <TextClock
-            android:id="@+id/text_clock"
+        <TextView
+            android:id="@+id/tv_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             android:background="@color/bssDateBg"
-            android:format24Hour="dd/MMM/yyyy HH:mm"
             android:gravity="center"
             android:paddingBottom="3dp"
             android:textColor="@color/bssDateTxt"

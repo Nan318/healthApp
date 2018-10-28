@@ -1,16 +1,27 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.app.Dialog;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +35,7 @@ import com.warkiz.tickseekbar.SeekParams;
 import com.warkiz.tickseekbar.TickSeekBar;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BssSurveyActivity extends AppCompatActivity{
@@ -32,18 +44,22 @@ public class BssSurveyActivity extends AppCompatActivity{
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_send;
-    //dody part
+    //body part
     private TextView txt_date;
     private ViewPager viewpager;
     private TickSeekBar bss_type;
     private TextView txt_type;
     private TextView txt_type_note;
+    private TimePickerView pvTime;
+    //private TextClock mTextClock;
+    private TextView tv_time;
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     //varialbe
+    private String submitTime;
     private int answer = -1;
     private EcogAndBssAnswerModel bssAnswer;
     //bss pictures to be selected
@@ -53,9 +69,9 @@ public class BssSurveyActivity extends AppCompatActivity{
     private int[] imgTitle = {R.string.bss_new_type1, R.string.bss_new_type2, R.string.bss_new_type3,
             R.string.bss_new_type4,R.string.bss_new_type5, R.string.bss_new_type6,
             R.string.bss_new_type7};
-    private int[] imgTxt = {R.string.bss_new_type1_txt, R.string.bss_new_type2_txt, R.string.bss_new_type3_txt,
-            R.string.bss_new_type4_txt, R.string.bss_new_type5_txt, R.string.bss_new_type6_txt,
-            R.string.bss_new_type7_txt};
+    private int[] imgTxt = {R.string.bss_new_type1_txt, R.string.bss_new_type2_txt,
+            R.string.bss_new_type3_txt, R.string.bss_new_type4_txt, R.string.bss_new_type5_txt,
+            R.string.bss_new_type6_txt, R.string.bss_new_type7_txt};
 
     @Override
     public void onStart() {
@@ -89,6 +105,13 @@ public class BssSurveyActivity extends AppCompatActivity{
         };
 
         /* * * * * initialize view  * * * * * */
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        //default: current time
+        Date date = new Date();
+        submitTime = TimeMethods.getTimeStringForDb(date); //format: "yyyy-MM-dd-HH-mm"
+        tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+
+        initTimePicker();
         iniView();
 
         /* * * * * set click event * * * * * */
@@ -121,27 +144,29 @@ public class BssSurveyActivity extends AppCompatActivity{
 
     }
     private void sendData(){
-        String date = "2018-10-24-21-35";
+        //String date = "2018-10-24-21-35";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("bss");
         bssAnswer = new EcogAndBssAnswerModel();
-        bssAnswer.setTime(date);
+        bssAnswer.setTime(submitTime);
         bssAnswer.setType(answer);
 
-        Query checkUnique = userRef.orderByChild("time").equalTo(date);
+        Query checkUnique = userRef.orderByChild("time").equalTo(submitTime);
         checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) { //update existing data
                     DataSnapshot nodeDataSnapshot = dataSnapshot.getChildren().iterator().next();
-                    String key = nodeDataSnapshot.getKey(); // this key is the eid of the existing data
+                    String key = nodeDataSnapshot.getKey(); // key is the eid of the existing data
                     userRef.child(key).child("type").setValue(answer);
-                    Toast.makeText(getApplicationContext() , "Updated ~" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext() , "Updated ~" ,
+                            Toast.LENGTH_SHORT).show();
                 } else { //add new data
                     userRef.push().setValue(bssAnswer);
-                    Toast.makeText(getApplicationContext() , "Added ~" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext() , "Added ~" ,
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -176,7 +201,14 @@ public class BssSurveyActivity extends AppCompatActivity{
         txt_date = (TextView) findViewById(R.id.date_txt);
         txt_date.setTypeface(font);
         //show date and time
-        //TextClock mTextClock = (TextClock)findViewById(R.id.text_clock);
+
+        tv_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvTime.show(view);
+            }
+        });
+
 
         //textview which shows the type id and note of bss images
         txt_type = (TextView) findViewById(R.id.type);
@@ -255,5 +287,51 @@ public class BssSurveyActivity extends AppCompatActivity{
 
         }
     };
+
+
+    private void initTimePicker() {
+        pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                submitTime = TimeMethods.getTimeStringForDb(date); //format: "yyyy-MM-dd-HH-mm"
+                tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+                Log.e("pvTime", TimeMethods.getTimeStringForDb(date));
+
+            }
+        })
+                .setTimeSelectChangeListener(new OnTimeSelectChangeListener() {
+                    @Override
+                    public void onTimeSelectChanged(Date date) {
+                        Log.i("pvTime", "onTimeSelectChanged");
+                    }
+                })
+                .setType(new boolean[]{false, true, true, true, true, false})//year,month,day,hour,minute,second
+                .setLabel("", "", "", ":", "", "")
+                .isCenterLabel(true)
+                .setTitleText("Select time")
+                .setSubmitText("OK")
+                .setCancelText("Cancel")
+                .isDialog(true) //default: false
+                .build();
+
+        Dialog mDialog = pvTime.getDialog();
+        if (mDialog != null) {
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM);
+
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            pvTime.getDialogContainerLayout().setLayoutParams(params);
+
+            Window dialogWindow = mDialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);
+                dialogWindow.setGravity(Gravity.CENTER);  //display the picker in the center
+            }
+        }
+    }
 
 }

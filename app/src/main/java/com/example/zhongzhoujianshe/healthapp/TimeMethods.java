@@ -18,6 +18,7 @@ public class TimeMethods {
 
     private static DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static DateFormat timeFormat2 = new SimpleDateFormat("dd/MMM/yyyy HH:mm");
     private static Calendar c = Calendar.getInstance();
 
     public static String getDateToday(){
@@ -25,6 +26,16 @@ public class TimeMethods {
         return dateFormat.format(date);
         //Log.e("today","----"+DateToday);
     }
+    public static String getDateStringForDb(Date date){
+        return dateFormat.format(date);
+    }
+    public static String getTimeStringForDb(Date date){
+        return timeFormat.format(date);
+    }
+    public static String getTimeStringForTxt(Date date){
+        return timeFormat2.format(date);
+    }
+
 
     public static String[] getDateLastWeek(){
         String[] week = new String[2];

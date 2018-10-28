@@ -1,5 +1,6 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.app.Dialog;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -10,13 +11,21 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +40,7 @@ import com.warkiz.tickseekbar.TickSeekBar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +55,16 @@ public class WvSurveyActivity extends AppCompatActivity{
     private EditText eth;
     private TextView txt_menu_back;
     private TextView txt_menu_send;
+    private TimePickerView pvTime;
+    //private TextClock mTextClock;
+    private TextView tv_time;
     //varialbes
     private String weight;
     private String height;
     private Double bmi = 0.0;
     private String bmi_s;
     private DecimalFormat df = new DecimalFormat("###.00");
-    private String time;
+    private String submitTime;
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
@@ -90,6 +103,14 @@ public class WvSurveyActivity extends AppCompatActivity{
             }
         };
         /* * * * * initialize view  * * * * * */
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        //default: current time
+        Date date = new Date();
+        submitTime = TimeMethods.getTimeStringForDb(date); //format: "yyyy-MM-dd-HH-mm"
+        tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+
+        initTimePicker();
+
         iniView();
 
         /* * * * * set event listener  * * * * * */
@@ -195,6 +216,13 @@ public class WvSurveyActivity extends AppCompatActivity{
         TextView txt_date = (TextView) findViewById(R.id.date_txt);
         txt_date.setTypeface(font);
 
+        tv_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvTime.show(view);
+            }
+        });
+
         //input part
         et_weight = (MyEditText) findViewById(R.id.et_weight);
         et_height = (MyEditText) findViewById(R.id.et_height);
@@ -206,7 +234,7 @@ public class WvSurveyActivity extends AppCompatActivity{
 
     private void sendData(){
         //date = qolResult.getDate();
-        time = "2018-10-24-19-23";
+        //time = "2018-10-24-19-23";
         weight = et_weight.getEtText();
         height = et_height.getEtText();
         bmi_s = et_bmi.getEtText();
@@ -215,10 +243,10 @@ public class WvSurveyActivity extends AppCompatActivity{
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("wv");
-        wvAnswer = new WvAnswerModel(time, weight, height, bmi_s);
+        wvAnswer = new WvAnswerModel(submitTime, weight, height, bmi_s);
 
 
-        Query checkUnique = userRef.orderByChild("time").equalTo(time);
+        Query checkUnique = userRef.orderByChild("time").equalTo(submitTime);
         checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -293,6 +321,51 @@ public class WvSurveyActivity extends AppCompatActivity{
 
             }
         });
+    }
+
+    private void initTimePicker() {
+        pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                submitTime = TimeMethods.getTimeStringForDb(date); //format: "yyyy-MM-dd-HH-mm"
+                tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+                Log.e("pvTime", TimeMethods.getTimeStringForDb(date));
+
+            }
+        })
+                .setTimeSelectChangeListener(new OnTimeSelectChangeListener() {
+                    @Override
+                    public void onTimeSelectChanged(Date date) {
+                        Log.i("pvTime", "onTimeSelectChanged");
+                    }
+                })
+                .setType(new boolean[]{false, true, true, true, true, false})//year,month,day,hour,minute,second
+                .setLabel("", "", "", ":", "", "")
+                .isCenterLabel(true)
+                .setTitleText("Select time")
+                .setSubmitText("OK")
+                .setCancelText("Cancel")
+                .isDialog(true) //default: false
+                .build();
+
+        Dialog mDialog = pvTime.getDialog();
+        if (mDialog != null) {
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM);
+
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            pvTime.getDialogContainerLayout().setLayoutParams(params);
+
+            Window dialogWindow = mDialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);
+                dialogWindow.setGravity(Gravity.CENTER);  //display the picker in the center
+            }
+        }
     }
 
 }

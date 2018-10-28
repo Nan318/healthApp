@@ -1,5 +1,6 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -7,12 +8,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Date;
 
 public class EcogSurveyActivity extends AppCompatActivity {
     //UI objects
@@ -34,6 +46,8 @@ public class EcogSurveyActivity extends AppCompatActivity {
     private TextView txt_date;
     private RadioGroup radioGroup;
     private TextView scale_note;
+    private TimePickerView pvTime;
+    private TextView tv_time;
     //firebase
     private String currentUserId;
     private DatabaseReference mRoot;
@@ -42,6 +56,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
     //varialbe
     private int answer = -1;
     private EcogAndBssAnswerModel ecogAnswer;
+    private String submitTime;
 
     @Override
     public void onStart() {
@@ -75,19 +90,26 @@ public class EcogSurveyActivity extends AppCompatActivity {
         };
 
         /* * * * * initialize view  * * * * * */
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        //default: current time
+        Date date = new Date();
+        submitTime = TimeMethods.getDateStringForDb(date); //format: "yyyy-MM-dd"
+        tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+
+        initTimePicker();
         iniView();
     }
     private void sendData(){
-        String date = "2018-10-24";
+        //String date = "2018-10-24";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
         //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("ecog");
         ecogAnswer = new EcogAndBssAnswerModel();
-        ecogAnswer.setTime(date);
+        ecogAnswer.setTime(submitTime);
         ecogAnswer.setType(answer);
 
-        Query checkUnique = userRef.orderByChild("time").equalTo(date);
+        Query checkUnique = userRef.orderByChild("time").equalTo(submitTime);
         checkUnique.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -148,6 +170,13 @@ public class EcogSurveyActivity extends AppCompatActivity {
         //set icon font for date_txt
         txt_date = (TextView) findViewById(R.id.date_txt);
         txt_date.setTypeface(font);
+
+        tv_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvTime.show(view);
+            }
+        });
 
         //display the discription of each scale
         scale_note = (TextView) findViewById(R.id.scale_note);
@@ -228,5 +257,50 @@ public class EcogSurveyActivity extends AppCompatActivity {
                 alert.dismiss();
             }
         });
+    }
+
+    private void initTimePicker() {
+        pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                submitTime = TimeMethods.getDateStringForDb(date); //format: "yyyy-MM-dd"
+                tv_time.setText(TimeMethods.getTimeStringForTxt(date));//format: "dd/MMM/yyyy HH:mm"
+                Log.e("pvTime", TimeMethods.getTimeStringForDb(date));
+
+            }
+        })
+                .setTimeSelectChangeListener(new OnTimeSelectChangeListener() {
+                    @Override
+                    public void onTimeSelectChanged(Date date) {
+                        Log.i("pvTime", "onTimeSelectChanged");
+                    }
+                })
+                .setType(new boolean[]{false, true, true, true, true, false})//year,month,day,hour,minute,second
+                .setLabel("", "", "", ":", "", "")
+                .isCenterLabel(true)
+                .setTitleText("Select time")
+                .setSubmitText("OK")
+                .setCancelText("Cancel")
+                .isDialog(true) //default: false
+                .build();
+
+        Dialog mDialog = pvTime.getDialog();
+        if (mDialog != null) {
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM);
+
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            pvTime.getDialogContainerLayout().setLayoutParams(params);
+
+            Window dialogWindow = mDialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);
+                dialogWindow.setGravity(Gravity.CENTER);  //display the picker in the center
+            }
+        }
     }
 }

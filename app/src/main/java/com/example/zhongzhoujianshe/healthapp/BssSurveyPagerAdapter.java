@@ -31,11 +31,8 @@ public class BssSurveyPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        //container.addView(imageViewList.get(position));
-        //return imageViewList.get(position);
-        //container.addView(imageViewList.get(position % imageViewList.size()), 0);
-        //return imageViewList.get(position % imageViewList.size());
-        //对ViewPager页号求模取出View列表中要显示的项  
+
+        //get position  
         position %= imageViewList.size();
         if(position<0){
             position = imageViewList.size()+position;
@@ -43,7 +40,8 @@ public class BssSurveyPagerAdapter extends PagerAdapter {
         ImageView view = imageViewList.get(position);
 
         //avoid IllegalStateException
-        //i.e. if the specified child already has a parent. You must call removeView() on the child's parent first.
+        //i.e. if the specified child already has a parent.
+        // You must call removeView() on the child's parent first.
         ViewParent vp =view.getParent();
         if(vp!=null){
             ViewGroup parent = (ViewGroup)vp;

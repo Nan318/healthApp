@@ -96,7 +96,6 @@ public class QolSurveyActivity extends AppCompatActivity{
         txt_menu_send.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 if(qolResult.getResults().size()<51){
-                    //Toast.makeText(getApplicationContext(), "finish"+qolResult.getResults().size(), Toast.LENGTH_LONG).show();
                     showSendDialog();
                 }else if(qolResult.getResults().size() == 51){
                     showConfirmDialog();
@@ -176,12 +175,10 @@ public class QolSurveyActivity extends AppCompatActivity{
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));
         builder.setView(dialogView);
-        //点击对话框以外的区域是否让对话框消失
         builder.setCancelable(false);
         alert = builder.create();
         alert.show();
 
-        //设置组件
         dialogBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,7 +196,6 @@ public class QolSurveyActivity extends AppCompatActivity{
         dialogBtnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "对话框已关闭~", Toast.LENGTH_SHORT).show();
                 alert.dismiss();
             }
         });
@@ -207,7 +203,7 @@ public class QolSurveyActivity extends AppCompatActivity{
 
     }
     private void showSendDialog() {
-        //加载布局并初始化组件
+
         View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_onebtn_dialog,null);
         MyRoundCornerButton dialogBtnOk = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_ok);
         dialogBtnOk.setFillet(true);
@@ -220,12 +216,10 @@ public class QolSurveyActivity extends AppCompatActivity{
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));
         builder.setView(dialogView);
-        //点击对话框以外的区域是否让对话框消失
         builder.setCancelable(false);
         alert = builder.create();
         alert.show();
 
-        //设置组件
         dialogBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -346,12 +340,10 @@ public class QolSurveyActivity extends AppCompatActivity{
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));
         builder.setView(dialogView);
-        //点击对话框以外的区域是否让对话框消失
         builder.setCancelable(false);
         alert = builder.create();
         alert.show();
 
-        //设置组件
         dialogBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -364,7 +356,6 @@ public class QolSurveyActivity extends AppCompatActivity{
         dialogBtnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "对话框已关闭~", Toast.LENGTH_SHORT).show();
                 alert.dismiss();
             }
         });
@@ -374,7 +365,6 @@ public class QolSurveyActivity extends AppCompatActivity{
         //date = qolResult.getDate();
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
-        //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("qol");
 
         Query checkUnique = userRef.orderByChild("date").equalTo(date);

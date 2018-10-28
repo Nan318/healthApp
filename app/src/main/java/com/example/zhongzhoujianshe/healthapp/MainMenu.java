@@ -133,13 +133,6 @@ public class MainMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
             showtime.setText("Good Afternoon!");
         }
 
-        // get date
-        /*SimpleDateFormat   dateFormat   =   new   SimpleDateFormat   ("yyyy-MM-dd");
-        Date cur = new Date(System.currentTimeMillis());
-        String da = dateFormat.format(cur);
-
-        TextView showdate= (TextView) findViewById(R.id.showdate);
-        showdate.setText(da);*/
 
         Calendar cal = Calendar.getInstance();
         String mMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);

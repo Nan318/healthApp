@@ -25,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestMyButton" />
         <activity android:name=".WvSurveyActivity" />
         <activity android:name=".EcogSurveyActivity" >
 

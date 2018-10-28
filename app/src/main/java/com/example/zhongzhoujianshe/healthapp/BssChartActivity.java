@@ -98,7 +98,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     private String DateLastMonthFirst;
     private String DateLastMonthLast;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 
     @Override
     public void onStart() {
@@ -237,23 +236,19 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
     private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener(this);
-        // 设置是否可以缩放图表
+        //scaleable or not
         lineChart.setScaleEnabled(true);
-        // 设置是否可以用手指移动图表
+        // move the chart by finger?
         lineChart.setDragEnabled(true);
 
-        lineChart.setNoDataText("No chart data available.");  //没数据后的显示
+        lineChart.setNoDataText("No chart data available.");  //show when no data
         lineChart.setNoDataTextColor(Color.WHITE);
-        lineChart.getAxisRight().setEnabled(false); //禁用右侧y轴
-        lineChart.getDescription().setEnabled(false);  // 不显示标签
+        lineChart.getAxisRight().setEnabled(false); //no right y axis
+        lineChart.getDescription().setEnabled(false);  // no label
         lineChart.animateY(2500);
         lineChart.animateX(1200);
 
-
-        //自定义适配器，适配于X轴
-        //String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
-        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
-
+        //x axis
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
@@ -281,7 +276,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         //xAxis.setLabelCount(3);
         // xAxis.setAxisMinimum(1f);  // from which data
 
-        //自定义适配器，适配于Y轴
+        //y axis
         IAxisValueFormatter patint = new MyAxisValueFormatter();
 
         YAxis leftAxis = lineChart.getAxisLeft();
@@ -305,8 +300,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         l.setDrawInside(false);
         l.setFormSize(8f);
         l.setTextColor(Color.WHITE);
-
-
 
         setLineChartData(lineData);
     }
@@ -344,13 +337,19 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         // mChart.setDrawBarShadow(true);
 
 
-        //自定义坐标轴适配器，设置在X轴
-        String[] xStrs = new String[]{ "","Type1", "Type2", "Type3","Type4","Type5","Type6","Type7"}; // 线图横坐标文字
-        int[] fourColor = new int[]{Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
-        int[] sevenColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
+        //x axis
+        // labels
+        String[] xStrs = new String[]{ "","Type1", "Type2", "Type3","Type4","Type5","Type6","Type7"};
+        int[] fourColor = new int[]{Color.rgb(102, 205, 0),
+                Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),
+                Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
+        int[] sevenColor = new int[]{Color.rgb(0, 238, 0),
+                Color.rgb(0, 205, 0),Color.rgb(102, 205, 0),
+                Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),
+                Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
 
-        //自定义适配器，适配于X轴
-        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);// 自定义y轴
+
+        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);// y axis
         XAxis xl = hBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawAxisLine(true);
@@ -361,10 +360,10 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
         xl.setTextColor(Color.WHITE);
         xl.setAxisLineColor(Color.WHITE);
-        //xl.setDrawLabels(false);   // 不要y轴的标签！
+        //xl.setDrawLabels(false);
 
 
-        //对Y轴进行设置
+        //y axis
         YAxis yl = hBarChart.getAxisLeft();
         yl.setDrawAxisLine(true);
         yl.setDrawGridLines(false);
@@ -372,7 +371,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         yl.setAxisMinimum(0f);
         yl.setTextColor(Color.WHITE);
         yl.setAxisLineColor(Color.WHITE);
-
 
 
         // this replaces setStartAtZero(true)
@@ -384,7 +382,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         //  hBarChart.getAxisRight().setDrawGridLines(false);
 
 
-        //图例设置
+        //legend
         Legend l = hBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -403,15 +401,11 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
 
 
     /**
-     * 设置水平柱形图数据的方法
+     * set bar chart's data
      */
     private void setHBarChartData(ArrayList<BarEntry> barDataset,int[] fourColor) {
-        //填充数据，在这里换成自己的数据源
-
 
         BarDataSet set1;
-
-
         if (hBarChart.getData() != null &&
                 hBarChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) hBarChart.getData().getDataSetByIndex(0);
@@ -497,9 +491,6 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
         btn1.setTextColori(getResources().getColor(R.color.bssChartOrange));
         btn2.setTextColori(getResources().getColor(R.color.bssChartOrange));
         btn3.setTextColori(getResources().getColor(R.color.bssChartOrange));
-        //btn1.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        //btn2.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
-        //btn3.setTextColorSelected(getResources().getColor(R.color.chartDarkBlue));
         //text
         btn1.setText(getResources().getString(R.string.chart_week));
         btn2.setText(getResources().getString(R.string.chart_month));
@@ -666,10 +657,10 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
             }
 
             for (int k = 0; k < barMonth.length; k++){
-                barMonthEntry.add(new BarEntry(k + 1, barMonth[k]));
+                barMonthEntry.add(new BarEntry(k + 1, barMonth[k])); //bar data
             }
 
-            initHBarChart(barMonthEntry);  //统计完以后插入纵坐标就好
+            initHBarChart(barMonthEntry);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 initLineChart(lineMonth);
             }
@@ -732,7 +723,7 @@ public class BssChartActivity extends AppCompatActivity implements OnChartValueS
                 barAllEntry.add(new BarEntry(k + 1, barAll[k]));
             }
 
-            initHBarChart(barAllEntry);  //统计完以后插入纵坐标就好
+            initHBarChart(barAllEntry);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 initLineChart(lineAll);
             }

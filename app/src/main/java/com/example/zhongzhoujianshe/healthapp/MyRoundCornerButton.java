@@ -21,20 +21,20 @@ import android.widget.Toast;
  */
 public class MyRoundCornerButton extends AppCompatButton {
 
-    private GradientDrawable gradientDrawable;//控件的样式
-    private String backColors = "";//背景色，String类型
-    private int backColori = 0;//背景色，int类型
-    private String backColorSelecteds = "";//按下后的背景色，String类型
-    private int backColorSelectedi = 0;//按下后的背景色，int类型
-    private int backGroundImage = 0;//背景图，只提供了Id
-    private int backGroundImageSeleted = 0;//按下后的背景图，只提供了Id
-    private String textColors = "";//文字颜色，String类型
-    private int textColori = 0;//文字颜色，int类型
-    private String textColorSeleteds = "";//按下后的文字颜色，String类型
-    private int textColorSeletedi = 0;//按下后的文字颜色，int类型
-    private float radius = 15;//圆角半径
+    private GradientDrawable gradientDrawable;//style
+    private String backColors = "";//background color: string type
+    private int backColori = 0;//background color: int type
+    private String backColorSelecteds = "";//pressed bg，String
+    private int backColorSelectedi = 0;//pressed bg，int
+    private int backGroundImage = 0;//bg pictures，id
+    private int backGroundImageSeleted = 0;//pressed bg pictures，id
+    private String textColors = "";//text color，String
+    private int textColori = 0;//text color，int
+    private String textColorSeleteds = "";//pressed text color，String
+    private int textColorSeletedi = 0;//pressed text color，int
+    private float radius = 15;//radius of round corner
     private int shape = 0;
-    private Boolean fillet = false;//是否设置圆角
+    private Boolean fillet = false;//round corner?
     private int strokeColor = 0; //default: no stroke
     private int strokeWidth = 0;
     private int pressedStrokeColor = 0; //stroke color when being touched
@@ -102,9 +102,9 @@ public class MyRoundCornerButton extends AppCompatButton {
     private void setColor(MotionEvent event){
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //按下
+                //press
                 if (backColorSelectedi != 0) {
-                    //先判断是否设置了按下后的背景色int型
+                    //set bg?
                     if (fillet) {
                         if (gradientDrawable == null) {
                             gradientDrawable = new GradientDrawable();
@@ -123,13 +123,13 @@ public class MyRoundCornerButton extends AppCompatButton {
                         setBackgroundColor(Color.parseColor(backColorSelecteds));
                     }
                 }
-                //判断是否设置了按下后文字的颜色
+                //set text color?
                 if (textColorSeletedi != 0) {
                     setTextColor(textColorSeletedi);
                 } else if (!textColorSeleteds.equals("")) {
                     setTextColor(Color.parseColor(textColorSeleteds));
                 }
-                //判断是否设置了按下后的背景图
+                //set bg picture?
                 if (backGroundImageSeleted != 0) {
                     setBackgroundResource(backGroundImageSeleted);
                 }
@@ -142,9 +142,9 @@ public class MyRoundCornerButton extends AppCompatButton {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                //抬起
+                //up
                 if (backColori == 0 && backColors.equals("")) {
-                    //如果没有设置背景色，默认改为透明
+                    //if didn't set bg, use default
                     if (fillet) {
                         if (gradientDrawable == null) {
                             gradientDrawable = new GradientDrawable();
@@ -172,7 +172,7 @@ public class MyRoundCornerButton extends AppCompatButton {
                         setBackgroundColor(Color.parseColor(backColors));
                     }
                 }
-                //如果为设置字体颜色，默认为黑色
+                //if didn't set text color, use default
                 if (textColori == 0 && textColors.equals("")) {
                     setTextColor(Color.BLACK);
                 } else if (textColori != 0) {
@@ -199,7 +199,7 @@ public class MyRoundCornerButton extends AppCompatButton {
         }
     }
     /**
-     * 设置按钮的背景色,如果未设置则默认为透明
+     * set bg
      * @param backColor
      */
     public void setBackColor(String backColor) {
@@ -225,7 +225,7 @@ public class MyRoundCornerButton extends AppCompatButton {
         }
     }
     /**
-     * 设置按钮的背景色,如果未设置则默认为透明
+     *
      * @param backColor
      */
     public void setBackColor(int backColor) {
@@ -251,21 +251,21 @@ public class MyRoundCornerButton extends AppCompatButton {
         }
     }
     /**
-     * 设置按钮按下后的颜色
+     * set pressed bg
      * @param backColorSelected
      */
     public void setBackColorSelected(int backColorSelected) {
         this.backColorSelectedi = backColorSelected;
     }
     /**
-     * 设置按钮按下后的颜色
+     * set pressed bg
      * @param backColorSelected
      */
     public void setBackColorSelected(String backColorSelected) {
         this.backColorSelecteds = backColorSelected;
     }
     /**
-     * 设置按钮的背景图
+     * set bg picture
      * @param backGroundImage
      */
     public void setBackGroundImage(int backGroundImage) {
@@ -275,14 +275,14 @@ public class MyRoundCornerButton extends AppCompatButton {
         }
     }
     /**
-     * 设置按钮按下的背景图
+     * set bg picture
      * @param backGroundImageSeleted
      */
     public void setBackGroundImageSeleted(int backGroundImageSeleted) {
         this.backGroundImageSeleted = backGroundImageSeleted;
     }
     /**
-     * 设置按钮圆角半径大小
+     * set radius of round corner
      * @param radius
      */
     public void setRadius(float radius) {
@@ -306,7 +306,7 @@ public class MyRoundCornerButton extends AppCompatButton {
                 bottomR, bottomR, bottomL, bottomL });
     }
     /**
-     * 设置按钮文字颜色
+     * set text color
      * @param textColor
      */
     public void setTextColors(String textColor) {
@@ -314,7 +314,7 @@ public class MyRoundCornerButton extends AppCompatButton {
         setTextColor(Color.parseColor(textColor));
     }
     /**
-     * 设置按钮文字颜色
+     * set text color
      * @param textColor
      */
     public void setTextColori(int textColor) {
@@ -322,14 +322,14 @@ public class MyRoundCornerButton extends AppCompatButton {
         setTextColor(textColor);
     }
     /**
-     * 设置按钮按下的文字颜色
+     * set pressed text color
      * @param textColor
      */
     public void setTextColorSelected(String textColor) {
         this.textColorSeleteds = textColor;
     }
     /**
-     * 设置按钮按下的文字颜色
+     * set pressed text color
      * @param textColor
      */
     public void setTextColorSelected(int textColor) {
@@ -362,34 +362,33 @@ public class MyRoundCornerButton extends AppCompatButton {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if(borderWidth != 0 && borderColor != 0){
-            // 创建画笔
+            // create paint
             Paint paint = new Paint();
-            // 获取该画笔颜色
+            // get color
             int color = paint.getColor();
-            // 设置画笔颜色
+            // set color
             paint.setColor(borderColor);
             paint.setStrokeWidth(borderWidth);
-            // 如果borders为true，表示左上右下都有边框
+            // if borders are true，all borders exist
             if (borderLeft) {
-                // 画左边框线
+                // draw left border
                 canvas.drawLine(0, 0, 0, this.getHeight() - 1, paint);
             }
             if (borderTop) {
-                // 画顶部边框线
+                //draw top border
                 canvas.drawLine(0, 0, this.getWidth() - 1, 0, paint);
             }
             if (borderRight) {
-                // 画右侧边框线
+                // draw right border
                 canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1,
                         this.getHeight() - 1, paint);
             }
             if (borderBottom) {
-                // 画底部边框线
+                // draw bottom border
                 canvas.drawLine(0, this.getHeight() - 1, this.getWidth() - 1,
                         this.getHeight() - 1, paint);
             }
 
-            // 设置画笔颜色归位
             paint.setColor(color);
         }
 
@@ -415,14 +414,14 @@ public class MyRoundCornerButton extends AppCompatButton {
     }
 
     /**
-     * 按钮的形状
+     * set shape
      * @param shape
      */
     public void setShape(int shape) {
         this.shape = shape;
     }
     /**
-     * 设置其是否为圆角
+     * round corner?
      * @param fillet
      */
     @SuppressWarnings("deprecation")

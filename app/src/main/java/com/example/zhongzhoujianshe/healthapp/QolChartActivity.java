@@ -229,22 +229,18 @@ public class QolChartActivity extends AppCompatActivity
     private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
-        // 设置是否可以缩放图表
+        // scaleable?
         lineChart.setScaleEnabled(true);
-        // 设置是否可以用手指移动图表
+        // drag ?
         lineChart.setDragEnabled(true);
 
-        lineChart.setNoDataText("No chart data available.");  //没数据后的显示
+        lineChart.setNoDataText("No chart data available.");  //no data view
         lineChart.setNoDataTextColor(Color.WHITE);
-        lineChart.getAxisRight().setEnabled(false); //禁用右侧y轴
-        lineChart.getDescription().setEnabled(false);  // 不显示标签
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
         lineChart.animateY(2500);
         lineChart.animateX(1200);
 
-
-        //自定义适配器，适配于X轴
-        //String[] xStrs = new String[]{ "","what", "噢", "冬","sha","k","cat","l","s","end"}; // 线图横坐标文字
-        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -271,7 +267,6 @@ public class QolChartActivity extends AppCompatActivity
         xAxis.setLabelCount(3);
         // xAxis.setAxisMinimum(1f);  // from which data
 
-        //自定义适配器，适配于Y轴
         IAxisValueFormatter patint = new MyAxisValueFormatter();
 
         YAxis leftAxis = lineChart.getAxisLeft();
@@ -335,18 +330,11 @@ public class QolChartActivity extends AppCompatActivity
         // draw shadows for each bar that show the maximum value
         // mChart.setDrawBarShadow(true);
 
-
-        //自定义坐标轴适配器，设置在X轴
         String[] xStrs = new String[]{ "","Not at All", "A Little", "Quite a Bit","Very Much"}; // 线图横坐标文字
         int[] fourColor = new int[]{Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
         int[] sevenColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
 
-
-
-
-
-        //自定义适配器，适配于X轴
-        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);// 自定义y轴
+        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);
         XAxis xl = hBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawAxisLine(true);
@@ -359,10 +347,9 @@ public class QolChartActivity extends AppCompatActivity
 
         xl.setTextColor(Color.WHITE);
         xl.setAxisLineColor(Color.WHITE);
-        //xl.setDrawLabels(false);   // 不要y轴的标签！
+        //xl.setDrawLabels(false);
 
 
-        //对Y轴进行设置
         YAxis yl = hBarChart.getAxisLeft();
         yl.setDrawAxisLine(true);
         yl.setDrawGridLines(false);
@@ -382,7 +369,7 @@ public class QolChartActivity extends AppCompatActivity
         //  hBarChart.getAxisRight().setDrawGridLines(false);
 
 
-        //图例设置
+        //legend
         Legend l = hBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -400,11 +387,9 @@ public class QolChartActivity extends AppCompatActivity
 
 
     /**
-     * 设置水平柱形图数据的方法
+     * set data for bar chart
      */
     private void setHBarChartData(ArrayList<BarEntry> barDataset,int[] fourColor) {
-        //填充数据，在这里换成自己的数据源
-
 
         BarDataSet set1;
 
@@ -432,21 +417,9 @@ public class QolChartActivity extends AppCompatActivity
             set1.setColors(fourColor);
 
 
-
-
-
-
-
-
-
-
             hBarChart.setData(data);
         }
     }
-
-    /**
-     * 设置折线图的数据
-     */
 
     @Override
     public void onNothingSelected() {
@@ -737,7 +710,7 @@ public class QolChartActivity extends AppCompatActivity
 
 
     public void getChartData(){
-//        Log.e("getChartData", "is empty:"+ String.valueOf(dateStr.isEmpty()));
+         //Log.e("getChartData", "is empty:"+ String.valueOf(dateStr.isEmpty()));
 
         if (!dateStr.isEmpty()){
             //set text for time ranges for bar chart

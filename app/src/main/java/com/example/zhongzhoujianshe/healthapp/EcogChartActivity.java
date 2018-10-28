@@ -134,8 +134,6 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         DateLastMonthLast = lastmonth[1];
         DateLastMonthFirst = lastmonth[0];
 
-
-
         /* * * * * firebase * * * * * */
         //get Uid
         mAuth = FirebaseAuth.getInstance();
@@ -223,41 +221,21 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
     private void initLineChart(final List<Entry> lineData) {
 
         lineChart.setOnChartValueSelectedListener(this);
-        // 设置是否可以缩放图表
+        // scaleabel?
         lineChart.setScaleEnabled(true);
-        // 设置是否可以用手指移动图表
+        // can drag?
         lineChart.setDragEnabled(true);
 
-        lineChart.setNoDataText("No chart data available.");  //没数据后的显示
+        lineChart.setNoDataText("No chart data available.");  //no data view
         lineChart.setNoDataTextColor(Color.WHITE);
-        lineChart.getAxisRight().setEnabled(false); //禁用右侧y轴
-        lineChart.getDescription().setEnabled(false);  // 不显示标签
+        lineChart.getAxisRight().setEnabled(false); //disable right y axis
+        lineChart.getDescription().setEnabled(false);  // no labels
         lineChart.animateY(2500);
         lineChart.animateX(1200);
 
-
-        //自定义适配器，适配于X轴
-        //String[] xStrs = new String[]{ "","就来", "阿建", "阿四","阿海","k","p","l","s","end"}; // 线图横坐标文字
-        //myBarChartFormatter aoz = new myBarChartFormatter(xStrs);
-
-
-
+        //x axis
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        /*
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return xAxisDisplay.get((int) value); // xVal is a string array
-            }
-
-            @Override
-            public int getDecimalDigits() {
-                return 0;
-            }
-        });
-*/
 
         if (lineData.size() > 0) {
             xAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -285,7 +263,7 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         //xAxis.setLabelCount(xAxisDisplay.size());
         // xAxis.setAxisMinimum(1f);  // from which data
 
-        //自定义适配器，适配于Y轴
+        //y axis
         IAxisValueFormatter patint = new MyAxisValueFormatter();
 
         YAxis leftAxis = lineChart.getAxisLeft();
@@ -353,21 +331,19 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         // mChart.setDrawBarShadow(true);
 
 
-        //自定义坐标轴适配器，设置在X轴
+        //x axis
         //String[] xStrs = new String[]{ "","Grade0", "Grade1", "Grade2","Grade3","Grade4"};
         String[] xStrs = new String[]{"", "Grade0", "Grade1", "Grade2","Grade3","Grade4"};
 
-        //int[] fourColor = new int[]{Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
         int[] fiveColor = new int[]{
                 Color.rgb(0, 238, 0),
                 Color.rgb(0, 205, 0),
                 Color.rgb(102, 205, 0),
                 Color.rgb(238, 180, 34),
                 Color.rgb(255, 130, 71)};
-        //int[] sevenColor = new int[]{Color.rgb(0, 238, 0),Color.rgb(0, 205, 0),Color.rgb(102, 205, 0), Color.rgb(162, 205, 90),Color.rgb(205, 190, 112),Color.rgb(238, 180, 34),Color.rgb(255, 130, 71)};
 
-        //自定义适配器，适配于X轴
-        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);// 自定义y轴
+
+        myBarChartFormatter xAxisFormatter = new myBarChartFormatter(xStrs);
         XAxis xl = hBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawAxisLine(true);
@@ -380,10 +356,9 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
         xl.setTextColor(Color.WHITE);
         xl.setAxisLineColor(Color.WHITE);
-        //xl.setDrawLabels(false);   // 不要y轴的标签！
 
 
-        //对Y轴进行设置
+        //y axis
         YAxis yl = hBarChart.getAxisLeft();
         yl.setDrawAxisLine(true);
         yl.setDrawGridLines(false);
@@ -391,8 +366,6 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         yl.setAxisMinimum(0f);
         yl.setTextColor(Color.WHITE);
         yl.setAxisLineColor(Color.WHITE);
-
-
 
         // this replaces setStartAtZero(true)
         // yl.setInverted(true);
@@ -403,7 +376,7 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
         //  hBarChart.getAxisRight().setDrawGridLines(false);
 
 
-        //图例设置
+        //legend
         Legend l = hBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -422,11 +395,9 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
 
 
     /**
-     * 设置水平柱形图数据的方法
+     * set data for bar chart
      */
     private void setHBarChartData(ArrayList<BarEntry> barDataset,int[] fourColor) {
-        //填充数据，在这里换成自己的数据源
-
 
         BarDataSet set1;
 

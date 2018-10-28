@@ -81,7 +81,8 @@ public class MyMultipleLineRadioGroup extends LinearLayout {
                     ((RadioButton) child).setChecked(true);
                     checkRadioButton((RadioButton) child);
                     if(mOnCheckedChangeListener != null){
-                        mOnCheckedChangeListener.onCheckedChanged(MyMultipleLineRadioGroup.this, child.getId());
+                        mOnCheckedChangeListener.onCheckedChanged(
+                                MyMultipleLineRadioGroup.this, child.getId());
                     }
                     return true;
                 }
@@ -102,7 +103,8 @@ public class MyMultipleLineRadioGroup extends LinearLayout {
                             ((RadioButton) button).setChecked(true);
                             checkRadioButton((RadioButton) button);
                             if(mOnCheckedChangeListener != null){
-                                mOnCheckedChangeListener.onCheckedChanged(MyMultipleLineRadioGroup.this, button.getId());
+                                mOnCheckedChangeListener.onCheckedChanged(
+                                        MyMultipleLineRadioGroup.this, button.getId());
                             }
                             return true;
                         }

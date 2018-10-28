@@ -10,9 +10,8 @@ public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.85f;
     private static final float MIN_ALPHA = 0.5f;
     @Override
-    //View: 应用切换动画到哪一个页面上
-    //float position: 表示相对于当前页正中的位置，0表示在正中的这个页面，1表示右边一个完整的页面，-1表示左边一个完整的页面
-    //                指 view 向左或向右的偏移量，有效区间为[-1, 1]
+    //float position: offset，0: the center page，1: right page，-1:left page
+    //                offset of view (left/ right)，value between [-1, 1]
     public void transformPage(@NonNull View view, float position) {
         int pageWidth = view.getWidth();
         int pageHeight = view.getHeight();

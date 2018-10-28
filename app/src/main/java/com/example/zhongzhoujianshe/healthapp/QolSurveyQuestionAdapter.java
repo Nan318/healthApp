@@ -85,7 +85,8 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
             switch (type){
                 case TYPE_4OPTION:
                     holder1 = new ViewHolder1();
-                    view = LayoutInflater.from(context).inflate(R.layout.qol_survey_listitem_4option,viewGroup,false);
+                    view = LayoutInflater.from(context)
+                            .inflate(R.layout.qol_survey_listitem_4option,viewGroup,false);
                     holder1.txt_question4 = (TextView) view.findViewById(R.id.txt_question4);
                     holder1.mRadioGroup = (MyMultipleLineRadioGroup) view.findViewById(R.id.radioGroup);
                     holder1.radioButton_11 = (RadioButton) view.findViewById(R.id.rb_11);
@@ -98,7 +99,8 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                     break;
                 case TYPE_7OPTION:
                     holder2 = new ViewHolder2();
-                    view = LayoutInflater.from(context).inflate(R.layout.qol_survey_listitem_7option,viewGroup,false);
+                    view = LayoutInflater.from(context)
+                            .inflate(R.layout.qol_survey_listitem_7option,viewGroup,false);
                     holder2.txt_question7 = (TextView) view.findViewById(R.id.txt_question7);
                     holder2.radioGroup1 = (RadioGroup) view.findViewById(R.id.radioGroup);
                     holder2.radioButton_11 = (RadioButton) view.findViewById(R.id.rb_1);
@@ -116,7 +118,7 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
         }else {//get holder
             switch (type){
                 case TYPE_4OPTION:
-                    holder1 = (ViewHolder1) view.getTag(R.id.Tag_4OPTION); //the Object stored in this view as a ta
+                    holder1 = (ViewHolder1) view.getTag(R.id.Tag_4OPTION);
                     break;
                 case TYPE_7OPTION:
                     holder2 = (ViewHolder2) view.getTag(R.id.Tag_7OPTION);
@@ -233,11 +235,8 @@ public class QolSurveyQuestionAdapter extends BaseAdapter{
                     holder2.radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup radioGroup, int selectedId) {
-                            // int getPosition = (Integer) radioGroup.getTag();  // Here we get the position that we have set for the checkbox using setTag.
-                            // qolQuestionList.get(getPosition).setSelected(selectedId); // Set the value of checkbox to maintain its state.
                             RadioButton selectedbtn = (RadioButton) radioGroup.findViewById(selectedId);
                             answer = selectedbtn.getText().toString();
-                            //Toast.makeText(context, qolQuestionList.get(position).getQuestionId()+"你选了" + answer, Toast.LENGTH_LONG).show();
                             questionId = qolQuestionList.get(position).getQuestionId();
                             String[] itemResult = new String[2];
                             itemResult[0] = String.valueOf(questionId);

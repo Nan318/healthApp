@@ -51,7 +51,6 @@ public class BssSurveyActivity extends AppCompatActivity{
     private TextView txt_type;
     private TextView txt_type_note;
     private TimePickerView pvTime;
-    //private TextClock mTextClock;
     private TextView tv_time;
     //firebase
     private String currentUserId;
@@ -147,7 +146,6 @@ public class BssSurveyActivity extends AppCompatActivity{
         //String date = "2018-10-24-21-35";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
-        //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("bss");
         bssAnswer = new EcogAndBssAnswerModel();
         bssAnswer.setTime(submitTime);

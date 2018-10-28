@@ -103,7 +103,6 @@ public class EcogSurveyActivity extends AppCompatActivity {
         //String date = "2018-10-24";
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();
-        //通过键名，获取数据库实例对象的子节点对象
         final DatabaseReference userRef = mRoot.child(currentUserId).child("ecog");
         ecogAnswer = new EcogAndBssAnswerModel();
         ecogAnswer.setTime(submitTime);
@@ -225,7 +224,7 @@ public class EcogSurveyActivity extends AppCompatActivity {
         });
     }
     private void showSendDialog() {
-        //加载布局并初始化组件
+
         View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_onebtn_dialog,null);
         MyRoundCornerButton dialogBtnOk = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_ok);
         dialogBtnOk.setFillet(true);
@@ -245,12 +244,11 @@ public class EcogSurveyActivity extends AppCompatActivity {
         builder = new AlertDialog.Builder(this);
         //builder.setTitle(getString(R.string.icon_warning));
         builder.setView(dialogView);
-        //点击对话框以外的区域是否让对话框消失
+        //cannot cancel the dialog when click other places
         builder.setCancelable(false);
         alert = builder.create();
         alert.show();
 
-        //设置组件
         dialogBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

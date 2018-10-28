@@ -735,10 +735,10 @@ public class QolChartActivity extends AppCompatActivity
                 }
             }
 
-            initHBarChart(barEntry);  //统计完以后插入纵坐标就好
+            initHBarChart(barEntry);  // initialize bar chart
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                initLineChart(lineEntry);
+                initLineChart(lineEntry); // initialize line chart
             }
             lineChart.isDrawMarkersEnabled();
             lineChart.setDrawMarkers(true);

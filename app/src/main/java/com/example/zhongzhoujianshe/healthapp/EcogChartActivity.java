@@ -608,14 +608,11 @@ public class EcogChartActivity extends AppCompatActivity implements OnChartValue
                     }
                 }
             }
-
             for (int k = 1; k < barWeek.length; k++){
                 barWeekEntry.add(new BarEntry(k, barWeek[k]));
             }
 
-            initHBarChart(barWeekEntry);  //统计完以后插入纵坐标就好
-            // String[] xAxis = TimeMethods.getXAxisText(dateWeek, dateWeek.size(), false);
-            // List<String> xAxisDisplay = TimeMethods.getXAxis(dateWeek, dateWeek.size(), false);
+            initHBarChart(barWeekEntry);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 initLineChart(lineWeek);
             }

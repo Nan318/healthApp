@@ -1,5 +1,6 @@
 package com.example.zhongzhoujianshe.healthapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -68,6 +69,10 @@ public class QolSurveyActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qol_survey);
+
+        /* * * * * get the submit time * * * * * */
+        Intent intent=getIntent();
+        date = intent.getStringExtra("submitTime");
 
         /* * * * * firebase * * * * * */
         //get Uid
@@ -140,7 +145,7 @@ public class QolSurveyActivity extends AppCompatActivity{
 
 
     private void showBackDialog() {
-        //加载布局并初始化组件
+        //initialize layout
         View dialogView = LayoutInflater.from(this).inflate(R.layout.qol_survey_threebtn_dialog,null);
         MyRoundCornerButton dialogBtnSave = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_save);
         MyRoundCornerButton dialogBtnDelete = (MyRoundCornerButton) dialogView.findViewById(R.id.btn_delete);
@@ -365,7 +370,7 @@ public class QolSurveyActivity extends AppCompatActivity{
         });
     }
     private void sendData(){
-        date = "2018-10-24";
+        //date = "2018-10-24";
         //date = qolResult.getDate();
         //send data
         mRoot = FirebaseDatabase.getInstance().getReference();

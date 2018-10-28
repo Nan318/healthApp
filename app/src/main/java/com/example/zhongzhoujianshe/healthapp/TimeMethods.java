@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.webkit.DateSorter;
 
+import org.threeten.bp.LocalDate;
+
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,6 +31,7 @@ public class TimeMethods {
     public static String getDateStringForDb(Date date){
         return dateFormat.format(date);
     }
+
     public static String getTimeStringForDb(Date date){
         return timeFormat.format(date);
     }

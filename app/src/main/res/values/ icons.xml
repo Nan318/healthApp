@@ -14,5 +14,5 @@
     <string name="icon_login">&#xe604;</string>
     <string name="icon_cog">&#xe65a;</string>
     <string name="icon_new">&#xe747;New</string>
-
+    <string name="icon_chart">&#xe658;</string>
 </resources>

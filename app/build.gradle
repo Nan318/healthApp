@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
 
 
 }

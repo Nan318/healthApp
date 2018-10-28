@@ -7,11 +7,13 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -43,8 +45,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,11 +61,14 @@ public class QolChartActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.N)
 
     //UI objects
+    private AlertDialog alert = null;
+    private AlertDialog.Builder builder = null;
     //toolbar part
     private Toolbar toolbar;
     private TextView txt_menu_back;
     private TextView txt_menu_new;
     //body
+    private MaterialCalendarView calendarView;
     private MyRoundCornerButton btn1;
     private MyRoundCornerButton btn2;
     private MyRoundCornerButton btn3;
@@ -89,10 +100,12 @@ public class QolChartActivity extends AppCompatActivity
     private ArrayList<BarEntry> barEntry;
     private int[] barCount;
     //variables
+    private String submitTime;
     private String DateLastWeekMon;
     private String DateLastWeekSun;
     private String DateLastMonthFirst;
     private String DateLastMonthLast;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public void onStart() {
@@ -113,6 +126,11 @@ public class QolChartActivity extends AppCompatActivity
         setContentView(R.layout.activity_qol_chart);
 
         /* * * * * initialize view  * * * * * */
+        //default: current time
+        Date date = new Date();
+        submitTime = TimeMethods.getDateStringForDb(date); //format: "yyyy-MM-dd"
+        Log.e("submitTime", submitTime);
+
         iniView();
 
         /* * * * * get date of today, last month and last week * * * * * */
@@ -457,6 +475,8 @@ public class QolChartActivity extends AppCompatActivity
         //set icon-font: cog
         TextView txt_menu_cog = (TextView) toolbar.findViewById(R.id.toolbar_cog);
         txt_menu_cog.setTypeface(font);
+
+        //set click event
         txt_menu_cog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -466,12 +486,10 @@ public class QolChartActivity extends AppCompatActivity
                 popup.show();
             }
         });
-
-        //set click event
         txt_menu_new.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(QolChartActivity.this, QolSurveyActivity.class);
+                Intent intent=new Intent(QolChartActivity.this,QolSurveyActivity.class);
+                intent.putExtra("submitTime", submitTime); // send the time to survey
                 startActivity(intent);
 
             }
@@ -517,7 +535,8 @@ public class QolChartActivity extends AppCompatActivity
         //set click event
         txt_date.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Toast.makeText(getApplicationContext() , "choose date" , Toast.LENGTH_SHORT).show();
+                showCalendar();
+                //Toast.makeText(getApplicationContext() , "choose date" , Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -531,6 +550,48 @@ public class QolChartActivity extends AppCompatActivity
         txt_little = findViewById(R.id.textView5);
         txt_bit = findViewById(R.id.textView4);
         txt_not = findViewById(R.id.textView6);
+    }
+
+    private void showCalendar() {
+        //initialize layout
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.calendar,null);
+        TextView tv_chart = (TextView) dialogView.findViewById(R.id.tv_chart);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/iconfont.ttf");
+        tv_chart.setTypeface(font);
+
+        builder = new AlertDialog.Builder(this);
+        //builder.setTitle(getString(R.string.icon_warning));
+        builder.setView(dialogView);
+        //点击对话框以外的区域是否让对话框消失
+        builder.setCancelable(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            alert = builder.create();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            alert.show();
+        }
+
+
+        tv_chart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    alert.dismiss();
+                }
+            }
+        });
+
+        calendarView = (MaterialCalendarView) dialogView.findViewById(R.id.calendarView);
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(
+                    @NonNull MaterialCalendarView materialCalendarView,
+                    @NonNull CalendarDay calendarDay,
+                    boolean b) {
+                submitTime = FORMATTER.format(calendarDay.getDate()); //format: "yyyy-MM-dd"
+                Log.e("submitTime", submitTime);
+            }
+        });
     }
 
     //set view shows when no data available

@@ -27,5 +27,11 @@
         <item name="colorControlNormal">@android:color/darker_gray</item>
         <item name="colorControlActivated">@color/wvDateTxt</item>
     </style>
+    <style name="MaterialCalendarDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
+        <item name="android:textColor">@drawable/mcv_text_date_dark</item>
+    </style>
+    <style name="MaterialCalendarHeaderTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
+        <item name="android:textColor">@color/dialog_blue</item>
+    </style>
 
 </resources>
